@@ -1,0 +1,29 @@
+{
+    "name": "user-game-api",
+    "version": "1.0.0",
+    "description": "Simple game api that store user account, biodata, and game histories",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js",
+        "dev": "nodemon app.js",
+        "postinstall": "npm run db-init",
+        "db-init": "npx sequelize-cli init && npx sequelize-cli db:create && npx sequelize-cli db:migrate",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "dotenv": "^16.0.0",
+        "express": "^4.17.3",
+        "express-validator": "^6.14.0",
+        "pg": "^8.7.3",
+        "sequelize": "^6.18.0",
+        "swagger-ui-express": "^4.3.0"
+    },
+    "devDependencies": {
+        "morgan": "^1.10.0",
+        "nodemon": "^2.0.15",
+        "sequelize-cli": "^6.4.1"
+    }
+}
