@@ -6,7 +6,8 @@
         "description": "Simple game api that store user account, biodata, and game histories"
     },
     "schemes": [
-        "http"
+        "http",
+        "https"
     ],
     "consumes": [
         "application/json"
