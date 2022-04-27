@@ -21,13 +21,6 @@ module.exports = {
         database: process.env.PROD_DB_NAME || 'game_production',
         host: process.env.PROD_DB_HOST || 'localhost',
         dialect: 'postgres',
-        logging: false,
-        ssl: true,
-        dialectOptions: {
-            ssl: {
-                require: true,
-                rejectUnauthorized: false
-            }
-        }
+        logging: false
     }
 }
