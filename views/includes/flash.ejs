@@ -1,0 +1,15 @@
+<% if (flash.type?.length > 0) { %>
+<div class="alert alert-<%= flash.type %> m-0 alert-dismissible fade show d-flex align-items-center" role="alert" id="alertFlash">
+    <%- flash.svg %>
+    <% if (flash.message?.length > 0) { %>
+    <p class="m-0"><%= flash.message %></p>
+    <% } else { %>
+    <div class="d-flex-justify-content-center flex-column">
+        <% for (const { msg, param } of flash.errors) { %>
+        <p class="m-0"><%= param %>: <%= msg %></p>
+        <% } %>
+    </div>
+    <% } %>
+    <button type="button" class="btn-close shadow-none" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<% } %>

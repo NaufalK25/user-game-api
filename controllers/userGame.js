@@ -1,20 +1,17 @@
 const { validationResult } = require('express-validator');
 const { badRequest, internalServerError, notFound } = require('./error');
+const { sequelizeErrorNames } = require('../config/constants');
 const { UserGame, UserGameBiodata, UserGameHistory } = require('../database/models');
-const { getDataById, sequelizeErrorNames } = require('../helper');
+const { getDataBySpecificField } = require('../helper');
 
-
-const getUserGameById = getDataById(UserGame);
+const getUserGameById = getDataBySpecificField(UserGame, 'id');
 
 module.exports = {
     create: async (req, res) => {
         try {
             const errors = validationResult(req);
 
-            if (!errors.isEmpty()) {
-                badRequest(errors.array(), req, res);
-                return;
-            }
+            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
             const userGame = await UserGame.create(req.body);
 
@@ -35,10 +32,7 @@ module.exports = {
         try {
             const errors = validationResult(req);
 
-            if (!errors.isEmpty()) {
-                badRequest(errors.array(), req, res);
-                return;
-            }
+            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
             const userGame = await getUserGameById(req.params.id);
             const oldUserGameData = { ...userGame.dataValues };
@@ -53,10 +47,7 @@ module.exports = {
                 after[field] = req.body[field];
             });
 
-            if (!userGame) {
-                notFound(req, res);
-                return;
-            }
+            if (!userGame) return notFound(req, res);
 
             await userGame.update(req.body);
 
@@ -80,17 +71,11 @@ module.exports = {
         try {
             const errors = validationResult(req);
 
-            if (!errors.isEmpty()) {
-                badRequest(errors.array(), req, res);
-                return;
-            }
+            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
             const userGame = await getUserGameById(req.params.id);
 
-            if (!userGame) {
-                notFound(req, res);
-                return;
-            }
+            if (!userGame) return notFound(req, res);
 
             await userGame.destroy();
 
@@ -107,20 +92,14 @@ module.exports = {
         try {
             const errors = validationResult(req);
 
-            if (!errors.isEmpty()) {
-                badRequest(errors.array(), req, res);
-                return;
-            }
-            
+            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+
             const userGame = await getUserGameById(req.params.id, [
                 { model: UserGameBiodata, },
                 { model: UserGameHistory, }
             ]);
 
-            if (!userGame) {
-                notFound(req, res);
-                return;
-            }
+            if (!userGame) return notFound(req, res);
 
             res.status(200).json({
                 statusCode: 200,

@@ -1,0 +1,29 @@
+<main class="p-3 d-flex justify-content-center align-items-center flex-column" style="flex:1 1 0%;gap:1rem 0;">
+    <%- include('./includes/flash', { flash }) %>
+
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserGameModal" id="createUserGameModalButton">
+        Create User Game
+    </button>
+    <div class="container text-center d-flex justify-content-center align-items-center flex-wrap" style="gap:1rem;">
+        <% for (userGame of userGames) { %>
+        <div class="card" style="width:18rem;">
+            <div class="card-body d-flex flex-column justify-content-center align-items-center" style="gap:0.5rem;">
+                <h5 class="card-title m-0 fw-bold"><%= `${userGame.UserGameBiodatum?.firstname || userGame.username} ${userGame.UserGameBiodatum?.lastname || ''}` %></h5>
+                <h6 class="card-subtitle text-muted m-0"><%= userGame.username %></h6>
+                <p class="m-0 fw-bold">Country: <span class="fw-normal"><%= userGame.UserGameBiodatum?.country || '-' %></span></p>
+                <div class="d-flex" style="gap:1rem;">
+                    <a href="/view/user_game/<%= userGame.id %>" class="btn btn-outline-primary" style="width:fit-content;">Details</a>
+                    <button type="button" class="btn btn-outline-warning updateUserGameModalButton" data-bs-toggle="modal" data-bs-target="#updateUserGameModal<%= userGame.id %>" data-usergameid="<%= userGame.id %>">Update</button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteUserGameModal<%= userGame.id %>">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <%- include('./includes/modals/user-game/update', { userGame}) %>
+
+        <%- include('./includes/modals/user-game/delete', { userGame}) %>
+        <% } %>
+    </div>
+</main>
+
+<%- include('./includes/modals/user-game/create') %>

@@ -1,7 +1,4 @@
-require('dotenv').config();
-
-const port = process.env.PORT || 3000;
-const baseUrl = process.env.BASE_URL || `http://localhost:${port}`;
+const { baseUrl } = require('../config/constants');
 
 const root = (req, res) => {
     res.status(200).json({
@@ -9,7 +6,10 @@ const root = (req, res) => {
         message: 'Welcome to the API',
         developer: 'Muhammad Naufal Kateni',
         documentation: `${baseUrl}/api-docs`,
-        baseUrl: `${baseUrl}/api/v1/user_games`,
+        apiLogin: `${baseUrl}/api/v1/login`,
+        api: `${baseUrl}/api/v1/user_games`,
+        viewLogin: `${baseUrl}/view/login`,
+        view: `${baseUrl}/view/user_games`,
     });
 };
 
@@ -41,10 +41,10 @@ const version = (req, res) => {
             userGameHistoriesByUserGameId: `${baseUrl}/api/v1/user_game/:userGameId/history`,
         },
     });
- };
+};
 
- module.exports = {
-     root,
-     api,
-     version,
- }
+module.exports = {
+    root,
+    api,
+    version,
+}

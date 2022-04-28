@@ -1,13 +1,13 @@
 const express = require('express');
 const { body, param } = require('express-validator');
-const { methodNotAllowed } = require('../controllers/error');
-const { create, destroy, findAll, findOne, update } = require('../controllers/userGameHistory');
+const { methodNotAllowedPage } = require('../../controllers/views/error');
+const { createUserGameHistory, deleteUserGameHistoryById, updateUserGameHistoryById } = require('../../controllers/views/userGameHistory');
 
 const router = express.Router();
 
-router.route('/api/v1/user_games/histories')
-    .get(findAll)
+router.route('/user_game/:id/history')
     .post([
+        param('id').isInt().withMessage('Id must be an integer'),
         body('title')
             .notEmpty().withMessage('Title is required')
             .isString().withMessage('Title must be a string'),
@@ -21,34 +21,28 @@ router.route('/api/v1/user_games/histories')
                 max: 100
             }).withMessage('Score must be an integer between 0 and 100'),
         body('userGameId').isInt().withMessage('UserGameId must be an integer'),
-    ], create)
-    .all(methodNotAllowed);
-
-router.route('/api/v1/user_game/history/:id')
-    .get([
-        param('id').isInt().withMessage('Id must be an integer'),
-    ], findOne)
+    ], createUserGameHistory)
     .patch([
         param('id').isInt().withMessage('Id must be an integer'),
         body('title')
-            .optional()
+            .notEmpty().withMessage('Title is required')
             .isString().withMessage('Title must be a string'),
         body('publisher')
-            .optional()
+            .notEmpty().withMessage('Publisher is required')
             .isString().withMessage('Publisher must be a string'),
         body('score')
-            .optional()
+            .notEmpty().withMessage('Score is required')
             .isInt({
                 min: 0,
                 max: 100
             }).withMessage('Score must be an integer between 0 and 100'),
-        body('userGameId')
-            .optional()
-            .isInt().withMessage('UserGameId must be an integer'),
-    ], update)
+        body('userGameId').isInt().withMessage('UserGameId must be an integer'),
+        body('userGameHistoryId').isInt().withMessage('UserGameHistoryId must be an integer'),
+    ], updateUserGameHistoryById)
     .delete([
         param('id').isInt().withMessage('Id must be an integer'),
-    ], destroy)
-    .all(methodNotAllowed);
+        body('userGameHistoryId').isInt().withMessage('UserGameHistoryId must be an integer'),
+    ], deleteUserGameHistoryById)
+    .all(methodNotAllowedPage);
 
 module.exports = router;

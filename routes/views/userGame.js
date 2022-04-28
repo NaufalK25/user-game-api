@@ -1,15 +1,13 @@
 const express = require('express');
 const { body, param } = require('express-validator');
-const { methodNotAllowed } = require('../controllers/error');
-const { create, destroy, findAll, findOne, update } = require('../controllers/userGame');
-const { findBiodataByUserGameId } = require('../controllers/userGameBiodata');
-const { findHistoriesByUserGameId } = require('../controllers/userGameHistory');
-const { UserGame } = require('../database/models');
+const { methodNotAllowedPage } = require('../../controllers/views/error');
+const { createUserGame, deleteUserGameById, getAllUserGamesPage, getUserGameByIdPage, updateUserGameById } = require('../../controllers/views/userGame');
+const { UserGame } = require('../../database/models');
 
 const router = express.Router();
 
-router.route('/api/v1/user_games')
-    .get(findAll)
+router.route('/user_games')
+    .get(getAllUserGamesPage)
     .post([
         body('username')
             .notEmpty().withMessage('Username is required')
@@ -23,29 +21,16 @@ router.route('/api/v1/user_games')
         body('password')
             .notEmpty().withMessage('Password is required')
             .isString().withMessage('Password must be a string'),
-    ], create)
-    .all(methodNotAllowed);
+    ], createUserGame)
+    .all(methodNotAllowedPage);
 
-router.route('/api/v1/user_game/:userGameId/biodata')
-    .get([
-        param('userGameId').isInt().withMessage('UserGameId must be an integer'),
-    ], findBiodataByUserGameId)
-    .all(methodNotAllowed);
-
-router.route('/api/v1/user_game/:userGameId/history')
-    .get([
-        param('userGameId').isInt().withMessage('UserGameId must be an integer'),
-    ], findHistoriesByUserGameId)
-    .all(methodNotAllowed);
-
-router.route('/api/v1/user_game/:id')
+router.route('/user_game/:id')
     .get([
         param('id').isInt().withMessage('Id must be an integer'),
-    ], findOne)
+    ], getUserGameByIdPage)
     .patch([
-        param('id').isInt().withMessage('Id must be an integer'),
         body('username')
-            .optional()
+            .notEmpty().withMessage('Username is required')
             .isString().withMessage('Username must be a string')
             .custom(async value => {
                 const userGame = await UserGame.findOne({ where: { username: value } });
@@ -54,12 +39,12 @@ router.route('/api/v1/user_game/:id')
                 }
             }),
         body('password')
-            .optional()
+            .notEmpty().withMessage('Password is required')
             .isString().withMessage('Password must be a string'),
-    ], update)
+    ], updateUserGameById)
     .delete([
         param('id').isInt().withMessage('Id must be an integer'),
-    ], destroy)
-    .all(methodNotAllowed);
+    ], deleteUserGameById)
+    .all(methodNotAllowedPage);
 
 module.exports = router;

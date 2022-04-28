@@ -1,0 +1,20 @@
+<div class="modal fade" id="deleteUserGameBiodataModal" tabindex="-1" aria-labelledby="deleteUserGameBiodataModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteUserGameBiodataModalLabel">Delete <%= userGame.username %>'s User Game Biodata</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="m-0">Are you sure you want to delete <%= userGame.username %>'s User Game Biodata?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="/view/user_game/<%= userGame.id %>/biodata?_method=DELETE" method="POST">
+                    <input type="hidden" name="userGameBiodataId" value="<%= userGame.UserGameBiodatum.id %>">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

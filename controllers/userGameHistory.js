@@ -1,19 +1,17 @@
 const { validationResult } = require('express-validator');
 const { badRequest, internalServerError, notFound } = require('./error');
+const { sequelizeErrorNames } = require('../config/constants');
 const { UserGame, UserGameHistory } = require('../database/models');
-const { getDataById, sequelizeErrorNames } = require('../helper');
+const { getDataBySpecificField } = require('../helper');
 
-const getUserGameHistoryById = getDataById(UserGameHistory);
+const getUserGameHistoryById = getDataBySpecificField(UserGameHistory, 'id');
 
 module.exports = {
     create: async (req, res) => {
         try {
             const errors = validationResult(req);
 
-            if (!errors.isEmpty()) {
-                badRequest(errors.array(), req, res);
-                return;
-            }
+            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
             const userGameHistory = await UserGameHistory.create({
                 title: req.body.title,
@@ -40,10 +38,7 @@ module.exports = {
         try {
             const errors = validationResult(req);
 
-            if (!errors.isEmpty()) {
-                badRequest(errors.array(), req, res);
-                return;
-            }
+            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
             const userGameHistory = await getUserGameHistoryById(req.params.id);
             const oldUserGameHistoryData = { ...userGameHistory.dataValues };
@@ -58,10 +53,7 @@ module.exports = {
                 after[field] = req.body[field];
             });
 
-            if (!userGameHistory) {
-                notFound(req, res);
-                return;
-            }
+            if (!userGameHistory) return notFound(req, res);
 
             await userGameHistory.update(req.body);
 
@@ -85,17 +77,11 @@ module.exports = {
         try {
             const errors = validationResult(req);
 
-            if (!errors.isEmpty()) {
-                badRequest(errors.array(), req, res);
-                return;
-            }
+            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
             const userGameHistory = await getUserGameHistoryById(req.params.id);
 
-            if (!userGameHistory) {
-                notFound(req, res);
-                return;
-            }
+            if (!userGameHistory) return notFound(req, res);
 
             await userGameHistory.destroy();
 
@@ -112,17 +98,11 @@ module.exports = {
         try {
             const errors = validationResult(req);
 
-            if (!errors.isEmpty()) {
-                badRequest(errors.array(), req, res);
-                return;
-            }
+            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
             const userGameHistory = await getUserGameHistoryById(req.params.id, [{ model: UserGame, }]);
 
-            if (!userGameHistory) {
-                notFound(req, res);
-                return;
-            }
+            if (!userGameHistory) return notFound(req, res);
 
             res.status(200).json({
                 statusCode: 200,
@@ -153,11 +133,8 @@ module.exports = {
         try {
             const errors = validationResult(req);
 
-            if (!errors.isEmpty()) {
-                badRequest(errors.array(), req, res);
-                return;
-            }
-            
+            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+
             const userGameHistories = await UserGameHistory.findAll({
                 where: { userGameId: req.params.userGameId, },
             });

@@ -1,0 +1,23 @@
+<div class="modal fade" id="deleteUserGameHistoryModal<%= history.id %>" tabindex="-1" aria-labelledby="deleteUserGameHistoryModalLabel<%= history.id %>" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteUserGameHistoryModalLabel<%= history.id %>">Delete <%= userGame.username %>'s User Game History</h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-center flex-column" style="gap:1rem;">
+                    <p class="m-0">Are you sure you want to delete <%= userGame.username %>'s User Game History?</p>
+                    <p class="m-0"><%= history.title %> - <%= history.score %></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="/view/user_game/<%= userGame.id %>/history?_method=DELETE" method="POST">
+                    <input type="hidden" name="userGameHistoryId" value="<%= history.id %>">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

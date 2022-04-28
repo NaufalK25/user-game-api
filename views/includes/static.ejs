@@ -1,0 +1,11 @@
+<% if (styles?.length > 0) { %>
+<% for (style of styles) { %>
+<link rel="stylesheet" href="<%= style %>">
+<% } %>
+<% } %>
+
+<% if (scripts?.length > 0) { %>
+<% for (script of scripts) { %>
+<script defer src="<%= script %>"></script>
+<% } %>
+<% } %>
