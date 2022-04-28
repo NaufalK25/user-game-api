@@ -2,7 +2,6 @@ const cookie = require('cookie-parser');
 const express = require('express');
 const flash = require('connect-flash');
 const methodOverride = require('method-override')
-const morgan = require('morgan');
 const expressLayouts = require('express-ejs-layouts');
 const session = require('express-session');
 const routes = require('./routes');
@@ -13,7 +12,6 @@ const app = express();
 
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
-app.use(morgan('dev'));
 app.use(methodOverride('_method'));
 app.use(cookie('secret'));
 app.use(session({
