@@ -13,11 +13,11 @@ jobs:
         with:
           node-version: "14.x"
       - name: Install yarn
-        uses: actions/setup-yarn@v1
-      - name: Install dependencies
-        uses: actions/yarn@v1
+        uses: sergioramos/yarn-actions/install@v6
         with:
-          yarn-version: "latest"
+          frozen-lockfile: true
+        - name: Install dependencies
+          run: yarn install
 
   deploy:
     runs-on: ubuntu-latest
