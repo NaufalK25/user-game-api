@@ -7,7 +7,7 @@
         "start": "node ./bin/www",
         "dev": "nodemon ./bin/www",
         "postinstall": "npm run db-init",
-        "db-init": "npx sequelize-cli db:migrate",
+        "db-init": "npx sequelize-cli db:migrate --env production",
         "test": "jest"
     },
     "keywords": [],
