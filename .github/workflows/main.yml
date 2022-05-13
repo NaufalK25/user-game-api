@@ -15,9 +15,9 @@ jobs:
       - name: Install yarn
         uses: sergioramos/yarn-actions/install@v6
         with:
-          frozen-lockfile: true
-        - name: Install dependencies
-          run: yarn install
+         frozen-lockfile: true
+      - name: Install dependencies
+        run: yarn install
 
   deploy:
     runs-on: ubuntu-latest
