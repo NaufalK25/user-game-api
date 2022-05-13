@@ -1,6 +1,5 @@
 const { validationResult } = require('express-validator');
-const { badRequest, internalServerError } = require('./error');
-const { sequelizeErrorNames } = require('../config/constants');
+const { badRequest } = require('./error');
 const { UserGame, UserGameBiodata, UserGameHistory } = require('../database/models');
 const { getDataBySpecificField } = require('../helper');
 
@@ -8,35 +7,33 @@ const getUserGameByUsername = getDataBySpecificField(UserGame, 'username');
 
 module.exports = {
     login: async (req, res) => {
-        try {
-            const errors = validationResult(req);
+        const errors = validationResult(req);
 
-            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-            const userGame = await getUserGameByUsername(req.body.username, [
-                { model: UserGameBiodata },
-                { model: UserGameHistory }
-            ]);
+        const userGame = await getUserGameByUsername(req.body.username, [
+            { model: UserGameBiodata },
+            { model: UserGameHistory }
+        ]);
 
-            if (userGame.password !== req.body.password) {
-                return badRequest(
-                    [{
-                        value: req.body.password,
-                        msg: 'Password is incorrect',
-                        param: 'password',
-                        location: 'body',
-                    }], req, res);
-            }
-
-            res.status(200).json({
-                token: 'TOKEN',
-            });
-        } catch (error) {
-            if (sequelizeErrorNames.includes(error.name)) {
-                badRequest(error, req, res);
-            } else {
-                internalServerError(error, req, res);
-            }
+        if (!userGame) {
+            return badRequest([{
+                value: req.body.username,
+                msg: 'Username not found',
+                param: 'username',
+                location: 'body'
+            }], req, res);
         }
-    },
+        if (userGame.password !== req.body.password) {
+            return badRequest(
+                [{
+                    value: req.body.password,
+                    msg: 'Incorrect password',
+                    param: 'password',
+                    location: 'body'
+                }], req, res);
+        }
+
+        res.status(200).json({ token: 'TOKEN' });
+    }
 }

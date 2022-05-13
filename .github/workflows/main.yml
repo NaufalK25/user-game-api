@@ -1,0 +1,31 @@
+name: Main
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
+      - name: Install yarn
+        uses: actions/setup-yarn@v1
+      - name: Install dependencies
+        uses: actions/yarn@v1
+        with:
+          yarn-version: "latest"
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: "29e83234-70b5-47e0-ac0d-34e0952bc45b"
+          heroku_app_name: "user-game-api"
+          heroku_email: "naufalkateni11@gmail.com"

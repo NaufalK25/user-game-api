@@ -20,7 +20,7 @@ router.route('/user_game/:id/history')
                 min: 0,
                 max: 100
             }).withMessage('Score must be an integer between 0 and 100'),
-        body('userGameId').isInt().withMessage('UserGameId must be an integer'),
+        body('userGameId').isInt().withMessage('UserGameId must be an integer')
     ], createUserGameHistory)
     .patch([
         param('id').isInt().withMessage('Id must be an integer'),
@@ -37,11 +37,11 @@ router.route('/user_game/:id/history')
                 max: 100
             }).withMessage('Score must be an integer between 0 and 100'),
         body('userGameId').isInt().withMessage('UserGameId must be an integer'),
-        body('userGameHistoryId').isInt().withMessage('UserGameHistoryId must be an integer'),
+        body('userGameHistoryId').isInt().withMessage('UserGameHistoryId must be an integer')
     ], updateUserGameHistoryById)
     .delete([
         param('id').isInt().withMessage('Id must be an integer'),
-        body('userGameHistoryId').isInt().withMessage('UserGameHistoryId must be an integer'),
+        body('userGameHistoryId').isInt().withMessage('UserGameHistoryId must be an integer')
     ], deleteUserGameHistoryById)
     .all(methodNotAllowedPage);
 

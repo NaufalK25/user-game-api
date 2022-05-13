@@ -22,19 +22,19 @@ router.route('/api/v1/user_games')
             }),
         body('password')
             .notEmpty().withMessage('Password is required')
-            .isString().withMessage('Password must be a string'),
+            .isString().withMessage('Password must be a string')
     ], create)
     .all(methodNotAllowed);
 
 router.route('/api/v1/user_game/:userGameId/biodata')
     .get([
-        param('userGameId').isInt().withMessage('UserGameId must be an integer'),
+        param('userGameId').isInt().withMessage('UserGameId must be an integer')
     ], findBiodataByUserGameId)
     .all(methodNotAllowed);
 
 router.route('/api/v1/user_game/:userGameId/history')
     .get([
-        param('userGameId').isInt().withMessage('UserGameId must be an integer'),
+        param('userGameId').isInt().withMessage('UserGameId must be an integer')
     ], findHistoriesByUserGameId)
     .all(methodNotAllowed);
 
@@ -55,10 +55,10 @@ router.route('/api/v1/user_game/:id')
             }),
         body('password')
             .optional()
-            .isString().withMessage('Password must be a string'),
+            .isString().withMessage('Password must be a string')
     ], update)
     .delete([
-        param('id').isInt().withMessage('Id must be an integer'),
+        param('id').isInt().withMessage('Id must be an integer')
     ], destroy)
     .all(methodNotAllowed);
 

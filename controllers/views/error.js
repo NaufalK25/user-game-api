@@ -1,31 +1,22 @@
-const { getEndpoint } = require('../../helper');
+const { getEndpoint, generateErrorRenderObject } = require('../../helper');
 
 module.exports = {
     notFoundPage: (req, res) => {
-        res.status(404).render('error', {
-            title: '404 Not Found',
-            layout: 'layouts/layout',
-            scripts: [],
-            styles: [],
-            message: `Endpoint ${getEndpoint(req.originalUrl)} not found`,
-        });
+        res.status(404).render('error', generateErrorRenderObject({
+            title: '404 Page Not Found',
+            message: `Endpoint ${getEndpoint(req.originalUrl)} not found`
+        }));
     },
     methodNotAllowedPage: (req, res) => {
-        res.status(405).render('error', {
+        res.status(405).render('error', generateErrorRenderObject({
             title: '405 Method Not Allowed',
-            layout: 'layouts/layout',
-            scripts: [],
-            styles: [],
-            message: `Method ${req.method} not allowed at endpoint ${getEndpoint(req.originalUrl)}`,
-        });
+            message: `Method ${req.method} not allowed at endpoint ${getEndpoint(req.originalUrl)}`
+        }));
     },
     internalServerErrorPage: (err, req, res) => {
-        res.status(500).render('error', {
+        res.status(500).render('error', generateErrorRenderObject({
             title: '500 Internal Server Error',
-            layout: 'layouts/layout',
-            scripts: [],
-            styles: [],
-            message: err,
-        });
-    },
+            message: err
+        }));
+    }
 }

@@ -4,11 +4,11 @@
     "description": "Simple game api that store user account, biodata, and game histories",
     "main": "app.js",
     "scripts": {
-        "start": "node app.js",
-        "dev": "nodemon app.js",
+        "start": "node ./bin/www",
+        "dev": "nodemon ./bin/www",
         "postinstall": "npm run db-init",
         "db-init": "npx sequelize-cli db:migrate",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "jest"
     },
     "keywords": [],
     "author": "",
@@ -17,6 +17,7 @@
         "connect-flash": "^0.1.1",
         "cookie-parser": "^1.4.6",
         "cors": "^2.8.5",
+        "debug": "^4.3.4",
         "dotenv": "^16.0.0",
         "ejs": "^3.0.2",
         "express": "^4.17.3",
@@ -29,8 +30,10 @@
         "swagger-ui-express": "^4.3.0"
     },
     "devDependencies": {
+        "jest": "^28.0.1",
         "morgan": "^1.10.0",
         "nodemon": "^2.0.15",
-        "sequelize-cli": "^6.4.1"
+        "sequelize-cli": "^6.4.1",
+        "supertest": "^6.2.3"
     }
 }

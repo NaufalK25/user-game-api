@@ -1,6 +1,5 @@
 const { validationResult } = require('express-validator');
-const { badRequest, internalServerError, notFound } = require('./error');
-const { sequelizeErrorNames } = require('../config/constants');
+const { badRequest, notFound } = require('./error');
 const { UserGame, UserGameBiodata } = require('../database/models');
 const { getDataBySpecificField } = require('../helper');
 
@@ -8,138 +7,98 @@ const getUserGameBiodataById = getDataBySpecificField(UserGameBiodata, 'id');
 
 module.exports = {
     create: async (req, res) => {
-        try {
-            const errors = validationResult(req);
+        const errors = validationResult(req);
 
-            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-            const userGameBiodata = await UserGameBiodata.create(req.body);
+        const userGameBiodata = await UserGameBiodata.create(req.body);
 
-            res.status(201).json({
-                statusCode: 201,
-                message: 'UserGameBiodata created successfully',
-                data: userGameBiodata,
-            });
-        } catch (error) {
-            if (sequelizeErrorNames.includes(error.name)) {
-                badRequest(error, req, res);
-            } else {
-                internalServerError(error, req, res);
-            }
-        }
+        res.status(201).json({
+            statusCode: 201,
+            message: 'UserGameBiodata created successfully',
+            data: userGameBiodata
+        });
     },
     update: async (req, res) => {
-        try {
-            const errors = validationResult(req);
+        const errors = validationResult(req);
 
-            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-            const userGameBiodata = await getUserGameBiodataById(req.params.id);
-            const oldUserGameBiodataData = { ...userGameBiodata.dataValues };
-            const userGameBiodataFields = Object.keys(userGameBiodata.dataValues);
-            let fieldChanged = Object.keys(req.body).filter(key => userGameBiodataFields.includes(key));
+        const userGameBiodata = await getUserGameBiodataById(req.params.id);
 
-            const before = {};
-            const after = {};
+        if (!userGameBiodata) return notFound(req, res);
 
-            fieldChanged.forEach(field => {
-                before[field] = oldUserGameBiodataData[field];
-                after[field] = req.body[field];
-            });
+        const oldUserGameBiodataData = { ...userGameBiodata.dataValues };
+        const userGameBiodataFields = Object.keys(userGameBiodata.dataValues);
+        let fieldChanged = Object.keys(req.body).filter(key => userGameBiodataFields.includes(key));
+        const before = {}, after = {};
 
-            if (!userGameBiodata) return notFound(req, res);
+        fieldChanged.forEach(field => {
+            before[field] = oldUserGameBiodataData[field];
+            after[field] = req.body[field];
+        });
 
-            await userGameBiodata.update(req.body);
+        await userGameBiodata.update(req.body);
 
-            res.status(200).json({
-                statusCode: 200,
-                message: 'UserGameBiodata updated successfully',
-                data: {
-                    before,
-                    after,
-                }
-            });
-        } catch (error) {
-            if (sequelizeErrorNames.includes(error.name)) {
-                badRequest(error, req, res);
-            } else {
-                internalServerError(error, req, res);
-            }
-        }
+        res.status(200).json({
+            statusCode: 200,
+            message: 'UserGameBiodata updated successfully',
+            data: { before, after }
+        });
     },
     destroy: async (req, res) => {
-        try {
-            const errors = validationResult(req);
+        const errors = validationResult(req);
 
-            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-            const userGameBiodata = await getUserGameBiodataById(req.params.id);
+        const userGameBiodata = await getUserGameBiodataById(req.params.id);
 
-            if (!userGameBiodata) return notFound(req, res);
+        if (!userGameBiodata) return notFound(req, res);
 
-            await userGameBiodata.destroy();
+        await userGameBiodata.destroy();
 
-            res.status(200).json({
-                statusCode: 200,
-                message: 'UserGameBiodata deleted successfully',
-                data: userGameBiodata,
-            });
-        } catch (error) {
-            internalServerError(error, req, res);
-        }
+        res.status(200).json({
+            statusCode: 200,
+            message: 'UserGameBiodata deleted successfully',
+            data: userGameBiodata
+        });
     },
     findOne: async (req, res) => {
-        try {
-            const errors = validationResult(req);
+        const errors = validationResult(req);
 
-            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-            const userGameBiodata = await getUserGameBiodataById(req.params.id, [{ model: UserGame }]);
+        const userGameBiodata = await getUserGameBiodataById(req.params.id, [{ model: UserGame }]);
 
-            if (!userGameBiodata) return notFound(req, res);
+        if (!userGameBiodata) return notFound(req, res);
 
-            res.status(200).json({
-                statusCode: 200,
-                message: 'OK',
-                data: userGameBiodata,
-            });
-        } catch (error) {
-            internalServerError(error, req, res);
-        }
+        res.status(200).json({
+            statusCode: 200,
+            message: 'OK',
+            data: userGameBiodata
+        });
     },
     findAll: async (req, res) => {
-        try {
-            const userGameBiodatas = await UserGameBiodata.findAll({
-                include: [{ model: UserGame, }]
-            });
+        const userGameBiodatas = await UserGameBiodata.findAll({ include: [{ model: UserGame }] });
 
-            res.status(200).json({
-                statusCode: 200,
-                message: 'OK',
-                count: userGameBiodatas.length,
-                data: userGameBiodatas,
-            });
-        } catch (error) {
-            internalServerError(error, req, res);
-        }
+        res.status(200).json({
+            statusCode: 200,
+            message: 'OK',
+            count: userGameBiodatas.length,
+            data: userGameBiodatas
+        });
     },
     findBiodataByUserGameId: async (req, res) => {
-        try {
-            const errors = validationResult(req);
+        const errors = validationResult(req);
 
-            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-            const userGameBiodata = await UserGameBiodata.findAll({
-                where: { userGameId: req.params.userGameId, },
-            });
+        const userGameBiodata = await UserGameBiodata.findAll({ where: { userGameId: req.params.userGameId } });
 
-            res.status(200).json({
-                statusCode: 200,
-                message: 'OK',
-                data: userGameBiodata,
-            });
-        } catch (error) {
-            internalServerError(error, req, res);
-        }
+        res.status(200).json({
+            statusCode: 200,
+            message: 'OK',
+            data: userGameBiodata
+        });
     }
 }

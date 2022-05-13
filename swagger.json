@@ -22,6 +22,9 @@
     },
     "tags": [
         {
+            "name": "Authentication"
+        },
+        {
             "name": "User Game",
             "description": "User Account Information"
         },
@@ -35,6 +38,46 @@
         }
     ],
     "paths": {
+        "/login": {
+            "post": {
+                "summary": "User login",
+                "operationId": "login",
+                "responses": {
+                    "200": {
+                        "description": "Login success",
+                        "schema": {
+                            "$ref": "#/definitions/loginResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/badRequestResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/generalErrorResponse"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Login user",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/postUserGamesRequest"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Authentication"
+                ]
+            }
+        },
         "/user_games": {
             "get": {
                 "summary": "Get all user games",
@@ -716,6 +759,15 @@
         }
     },
     "definitions": {
+        "loginResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string",
+                    "format": "string"
+                }
+            }
+        },
         "userGame": {
             "type": "object",
             "properties": {
@@ -855,7 +907,7 @@
                     "type": "integer",
                     "format": "int32"
                 },
-                "userGame": {
+                "UserGame": {
                     "$ref": "#/definitions/userGame"
                 }
             }
@@ -932,7 +984,7 @@
                     "type": "integer",
                     "format": "int32"
                 },
-                "userGame": {
+                "UserGame": {
                     "$ref": "#/definitions/userGame"
                 }
             }

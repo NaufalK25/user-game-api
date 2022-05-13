@@ -29,10 +29,8 @@ router.route('/user_game/:id/biodata')
             .isString().withMessage('Country must be a string'),
         body('age')
             .notEmpty().withMessage('Age is required')
-            .isInt({
-                min: 1
-            }).withMessage('Age must be a number greater than 1'),
-        body('userGameId').isInt().withMessage('UserGameId must be an integer'),
+            .isInt({ min: 1 }).withMessage('Age must be a number greater than 1'),
+        body('userGameId').isInt().withMessage('    must be an integer')
     ], createUserGameBiodata)
     .patch([
         param('id').isInt().withMessage('Id must be an integer'),
@@ -56,15 +54,13 @@ router.route('/user_game/:id/biodata')
             .isString().withMessage('Country must be a string'),
         body('age')
             .notEmpty().withMessage('Age is required')
-            .isInt({
-                min: 1
-            }).withMessage('Age must be a number greater than 1'),
+            .isInt({ min: 1 }).withMessage('Age must be a number greater than 1'),
         body('userGameId').isInt().withMessage('UserGameId must be an integer'),
-        body('userGameBiodataId').isInt().withMessage('UserGameBiodataId must be an integer'),
+        body('userGameBiodataId').isInt().withMessage('UserGameBiodataId must be an integer')
     ], updateUserGameBiodataById)
     .delete([
         param('id').isInt().withMessage('Id must be an integer'),
-        body('userGameBiodataId').isInt().withMessage('UserGameBiodataId must be an integer'),
+        body('userGameBiodataId').isInt().withMessage('UserGameBiodataId must be an integer')
     ], deleteUserGameBiodataById)
     .all(methodNotAllowedPage);
 

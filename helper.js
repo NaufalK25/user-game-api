@@ -1,32 +1,42 @@
 const { SVG } = require('./config/constants');
 
-const getEndpoint = (endpoint) => {
+const getEndpoint = (endpoint = '/api/v1') => {
+    if (!endpoint) return '';
     endpoint = endpoint.replace(/\/api\/v1/, '');
     return (endpoint === '/') ? endpoint : endpoint.replace(/\/$/, '');
 }
 
 const getDataBySpecificField = (model, field) => {
+    if (!model && !field) return [];
     return async (value, include = []) => {
-        return await model.findOne({
-            where: {
-                [field]: value,
-            },
-            include,
-        });
+        if (!value) return [];
+        return await model.findOne({ where: { [field]: value }, include });
     }
 }
 
-const generateRenderObject = ({ title, scripts = [], styles = [], extras = {} }) => {
+const generateRenderObject = ({ title = 'User Game API', scripts = [], styles = [], extras = {} } = {}) => {
     return {
         title,
         layout: 'layouts/layout',
         scripts: [...scripts],
         styles: [...styles],
-        ...extras,
+        ...extras
     }
 }
 
-const generateFlash = (req, { type, message = '', errors = [] }) => {
+const generateErrorRenderObject = ({ title, message } = {}) => {
+    if (!title && !message) return {};
+    return {
+        title,
+        layout: 'layouts/layout',
+        scripts: [],
+        styles: [],
+        message
+    }
+}
+
+const generateFlash = (req, { type, message = '', errors = [] } = {}) => {
+    if (!req || !type) return;
     req.flash('type', type);
     req.flash('svg', SVG[type]);
 
@@ -37,9 +47,24 @@ const generateFlash = (req, { type, message = '', errors = [] }) => {
     }
 }
 
+const generateFlashObject = (req) => {
+    try {
+        return {
+            type: req.flash('type') || '',
+            svg: req.flash('svg') || '',
+            message: req.flash('message') || '',
+            errors: req.flash('errors') || []
+        };
+    } catch (error) {
+        return {};
+    }
+}
+
 module.exports = {
-    generateFlash,
-    generateRenderObject,
     getDataBySpecificField,
     getEndpoint,
+    generateRenderObject,
+    generateErrorRenderObject,
+    generateFlash,
+    generateFlashObject
 }

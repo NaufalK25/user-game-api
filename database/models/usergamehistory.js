@@ -11,19 +11,17 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            this.belongsTo(models.UserGame, {
-                foreignKey: 'userGameId',
-            });
+            this.belongsTo(models.UserGame, { foreignKey: 'userGameId' });
         }
     }
     UserGameHistory.init({
         title: DataTypes.STRING,
         publisher: DataTypes.STRING,
         lastPlayed: DataTypes.DATE,
-        score: DataTypes.INTEGER,
+        score: DataTypes.INTEGER
     }, {
         sequelize,
-        modelName: 'UserGameHistory',
+        modelName: 'UserGameHistory'
     });
     return UserGameHistory;
 };

@@ -20,13 +20,13 @@ router.route('/api/v1/user_games/histories')
                 min: 0,
                 max: 100
             }).withMessage('Score must be an integer between 0 and 100'),
-        body('userGameId').isInt().withMessage('UserGameId must be an integer'),
+        body('userGameId').isInt().withMessage('UserGameId must be an integer')
     ], create)
     .all(methodNotAllowed);
 
 router.route('/api/v1/user_game/history/:id')
     .get([
-        param('id').isInt().withMessage('Id must be an integer'),
+        param('id').isInt().withMessage('Id must be an integer')
     ], findOne)
     .patch([
         param('id').isInt().withMessage('Id must be an integer'),
@@ -44,10 +44,10 @@ router.route('/api/v1/user_game/history/:id')
             }).withMessage('Score must be an integer between 0 and 100'),
         body('userGameId')
             .optional()
-            .isInt().withMessage('UserGameId must be an integer'),
+            .isInt().withMessage('UserGameId must be an integer')
     ], update)
     .delete([
-        param('id').isInt().withMessage('Id must be an integer'),
+        param('id').isInt().withMessage('Id must be an integer')
     ], destroy)
     .all(methodNotAllowed);
 

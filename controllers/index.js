@@ -9,7 +9,7 @@ const root = (req, res) => {
         apiLogin: `${baseUrl}/api/v1/login`,
         api: `${baseUrl}/api/v1/user_games`,
         viewLogin: `${baseUrl}/view/login`,
-        view: `${baseUrl}/view/user_games`,
+        view: `${baseUrl}/view/user_games`
     });
 };
 
@@ -17,11 +17,7 @@ const api = (req, res) => {
     res.status(200).json({
         statusCode: 200,
         message: 'OK',
-        versions: [
-            {
-                v1: `${baseUrl}/api/v1`,
-            },
-        ],
+        versions: [{ v1: `${baseUrl}/api/v1` }]
     });
 };
 
@@ -38,13 +34,9 @@ const version = (req, res) => {
             userGameBiodataByUserGameId: `${baseUrl}/api/v1/user_game/:userGameId/biodata`,
             userGameHistories: `${baseUrl}/api/v1/user_games/histories`,
             userGameHistory: `${baseUrl}/api/v1/user_game/history/:id`,
-            userGameHistoriesByUserGameId: `${baseUrl}/api/v1/user_game/:userGameId/history`,
-        },
+            userGameHistoriesByUserGameId: `${baseUrl}/api/v1/user_game/:userGameId/history`
+        }
     });
 };
 
-module.exports = {
-    root,
-    api,
-    version,
-}
+module.exports = { root, api, version }

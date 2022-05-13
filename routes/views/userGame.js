@@ -20,13 +20,13 @@ router.route('/user_games')
             }),
         body('password')
             .notEmpty().withMessage('Password is required')
-            .isString().withMessage('Password must be a string'),
+            .isString().withMessage('Password must be a string')
     ], createUserGame)
     .all(methodNotAllowedPage);
 
 router.route('/user_game/:id')
     .get([
-        param('id').isInt().withMessage('Id must be an integer'),
+        param('id').isInt().withMessage('Id must be an integer')
     ], getUserGameByIdPage)
     .patch([
         body('username')
@@ -40,10 +40,10 @@ router.route('/user_game/:id')
             }),
         body('password')
             .notEmpty().withMessage('Password is required')
-            .isString().withMessage('Password must be a string'),
+            .isString().withMessage('Password must be a string')
     ], updateUserGameById)
     .delete([
-        param('id').isInt().withMessage('Id must be an integer'),
+        param('id').isInt().withMessage('Id must be an integer')
     ], deleteUserGameById)
     .all(methodNotAllowedPage);
 

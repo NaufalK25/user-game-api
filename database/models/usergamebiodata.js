@@ -11,9 +11,7 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            this.belongsTo(models.UserGame, {
-                foreignKey: 'userGameId',
-            });
+            this.belongsTo(models.UserGame, { foreignKey: 'userGameId' });
         }
     }
     UserGameBiodata.init({
@@ -21,10 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         firstname: DataTypes.STRING,
         lastname: DataTypes.STRING,
         country: DataTypes.STRING,
-        age: DataTypes.INTEGER,
+        age: DataTypes.INTEGER
     }, {
         sequelize,
-        modelName: 'UserGameBiodata',
+        modelName: 'UserGameBiodata'
     });
     return UserGameBiodata;
 };

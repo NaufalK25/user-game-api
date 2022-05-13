@@ -1,6 +1,5 @@
 const { validationResult } = require('express-validator');
-const { badRequest, internalServerError, notFound } = require('./error');
-const { sequelizeErrorNames } = require('../config/constants');
+const { badRequest, notFound } = require('./error');
 const { UserGame, UserGameHistory } = require('../database/models');
 const { getDataBySpecificField } = require('../helper');
 
@@ -8,145 +7,105 @@ const getUserGameHistoryById = getDataBySpecificField(UserGameHistory, 'id');
 
 module.exports = {
     create: async (req, res) => {
-        try {
-            const errors = validationResult(req);
+        const errors = validationResult(req);
 
-            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-            const userGameHistory = await UserGameHistory.create({
-                title: req.body.title,
-                publisher: req.body.publisher,
-                lastPlayed: new Date(),
-                score: req.body.score,
-                userGameId: req.body.userGameId,
-            });
+        const userGameHistory = await UserGameHistory.create({
+            title: req.body.title,
+            publisher: req.body.publisher,
+            lastPlayed: new Date(),
+            score: req.body.score,
+            userGameId: req.body.userGameId
+        });
 
-            res.status(201).json({
-                statusCode: 201,
-                message: 'UserGameHistory created successfully',
-                data: userGameHistory,
-            });
-        } catch (error) {
-            if (sequelizeErrorNames.includes(error.name)) {
-                badRequest(error, req, res);
-            } else {
-                internalServerError(error, req, res);
-            }
-        }
+        res.status(201).json({
+            statusCode: 201,
+            message: 'UserGameHistory created successfully',
+            data: userGameHistory
+        });
     },
     update: async (req, res) => {
-        try {
-            const errors = validationResult(req);
+        const errors = validationResult(req);
 
-            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-            const userGameHistory = await getUserGameHistoryById(req.params.id);
-            const oldUserGameHistoryData = { ...userGameHistory.dataValues };
-            const userGameHistoryFields = Object.keys(userGameHistory.dataValues);
-            let fieldChanged = Object.keys(req.body).filter(key => userGameHistoryFields.includes(key));
+        const userGameHistory = await getUserGameHistoryById(req.params.id);
 
-            const before = {};
-            const after = {};
+        if (!userGameHistory) return notFound(req, res);
 
-            fieldChanged.forEach(field => {
-                before[field] = oldUserGameHistoryData[field];
-                after[field] = req.body[field];
-            });
+        const oldUserGameHistoryData = { ...userGameHistory.dataValues };
+        const userGameHistoryFields = Object.keys(userGameHistory.dataValues);
+        let fieldChanged = Object.keys(req.body).filter(key => userGameHistoryFields.includes(key));
+        const before = {}, after = {};
 
-            if (!userGameHistory) return notFound(req, res);
+        fieldChanged.forEach(field => {
+            before[field] = oldUserGameHistoryData[field];
+            after[field] = req.body[field];
+        });
 
-            await userGameHistory.update(req.body);
+        await userGameHistory.update(req.body);
 
-            res.status(200).json({
-                statusCode: 200,
-                message: 'UserGameHistory updated successfully',
-                data: {
-                    before,
-                    after,
-                }
-            });
-        } catch (error) {
-            if (sequelizeErrorNames.includes(error.name)) {
-                badRequest(error, req, res);
-            } else {
-                internalServerError(error, req, res);
-            }
-        }
+        res.status(200).json({
+            statusCode: 200,
+            message: 'UserGameHistory updated successfully',
+            data: { before, after }
+        });
     },
     destroy: async (req, res) => {
-        try {
-            const errors = validationResult(req);
+        const errors = validationResult(req);
 
-            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-            const userGameHistory = await getUserGameHistoryById(req.params.id);
+        const userGameHistory = await getUserGameHistoryById(req.params.id);
 
-            if (!userGameHistory) return notFound(req, res);
+        if (!userGameHistory) return notFound(req, res);
 
-            await userGameHistory.destroy();
+        await userGameHistory.destroy();
 
-            res.status(200).json({
-                statusCode: 200,
-                message: 'UserGameHistory deleted successfully',
-                data: userGameHistory,
-            });
-        } catch (error) {
-            internalServerError(error, req, res);
-        }
+        res.status(200).json({
+            statusCode: 200,
+            message: 'UserGameHistory deleted successfully',
+            data: userGameHistory
+        });
     },
     findOne: async (req, res) => {
-        try {
-            const errors = validationResult(req);
+        const errors = validationResult(req);
 
-            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-            const userGameHistory = await getUserGameHistoryById(req.params.id, [{ model: UserGame, }]);
+        const userGameHistory = await getUserGameHistoryById(req.params.id, [{ model: UserGame }]);
 
-            if (!userGameHistory) return notFound(req, res);
+        if (!userGameHistory) return notFound(req, res);
 
-            res.status(200).json({
-                statusCode: 200,
-                message: 'OK',
-                data: userGameHistory,
-            });
-        } catch (error) {
-            internalServerError(error, req, res);
-        }
+        res.status(200).json({
+            statusCode: 200,
+            message: 'OK',
+            data: userGameHistory
+        });
     },
     findAll: async (req, res) => {
-        try {
-            const userGameHistories = await UserGameHistory.findAll({
-                include: [{ model: UserGame, }]
-            });
+        const userGameHistories = await UserGameHistory.findAll({ include: [{ model: UserGame, }] });
 
-            res.status(200).json({
-                statusCode: 200,
-                message: 'OK',
-                count: userGameHistories.length,
-                data: userGameHistories,
-            });
-        } catch (error) {
-            internalServerError(error, req, res);
-        }
+        res.status(200).json({
+            statusCode: 200,
+            message: 'OK',
+            count: userGameHistories.length,
+            data: userGameHistories
+        });
     },
     findHistoriesByUserGameId: async (req, res) => {
-        try {
-            const errors = validationResult(req);
+        const errors = validationResult(req);
 
-            if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
+        if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-            const userGameHistories = await UserGameHistory.findAll({
-                where: { userGameId: req.params.userGameId, },
-            });
+        const userGameHistories = await UserGameHistory.findAll({ where: { userGameId: req.params.userGameId } });
 
-            res.status(200).json({
-                statusCode: 200,
-                message: 'OK',
-                count: userGameHistories.length,
-                data: userGameHistories,
-            });
-        } catch (error) {
-            internalServerError(error, req, res);
-        }
+        res.status(200).json({
+            statusCode: 200,
+            message: 'OK',
+            count: userGameHistories.length,
+            data: userGameHistories
+        });
     }
 }

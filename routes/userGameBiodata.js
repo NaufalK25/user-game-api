@@ -29,21 +29,16 @@ router.route('/api/v1/user_games/biodatas')
             .isString().withMessage('Country must be a string'),
         body('age')
             .notEmpty().withMessage('Age is required')
-            .isInt({
-                min: 1
-            }).withMessage('Age must be a number greater than 1'),
-        body('userGameId').isInt().withMessage('UserGameId must be an integer'),
+            .isInt({ min: 1 }).withMessage('Age must be a number greater than 1'),
+        body('userGameId').isInt().withMessage('UserGameId must be an integer')
     ], create)
     .all(methodNotAllowed);
 
 router.route('/api/v1/user_game/biodata/:id')
     .get([
-        param('id').isInt().withMessage('Id must be an integer'),
+        param('id').isInt().withMessage('Id must be an integer')
     ], findOne)
     .patch([
-        param('id').isInt().withMessage('Id must be an integer'),
-    ], update)
-    .delete([
         param('id').isInt().withMessage('Id must be an integer'),
         body('email')
             .optional()
@@ -65,12 +60,13 @@ router.route('/api/v1/user_game/biodata/:id')
             .isString().withMessage('Country must be a string'),
         body('age')
             .optional()
-            .isInt({
-                min: 1
-            }).withMessage('Age must be a number greater than 1'),
+            .isInt({ min: 1 }).withMessage('Age must be a number greater than 1'),
         body('userGameId')
             .optional()
-            .isInt().withMessage('UserGameId must be an integer'),
+            .isInt().withMessage('UserGameId must be an integer')
+    ], update)
+    .delete([
+        param('id').isInt().withMessage('Id must be an integer')
     ], destroy)
     .all(methodNotAllowed);
 

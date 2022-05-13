@@ -12,7 +12,7 @@ router.route('/api/v1/login')
             .isString().withMessage('Username must be a string'),
         body('password')
             .notEmpty().withMessage('Password is required')
-            .isString().withMessage('Password must be a string'),
+            .isString().withMessage('Password must be a string')
     ], login)
     .all(methodNotAllowed);
 

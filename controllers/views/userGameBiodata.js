@@ -1,8 +1,7 @@
 const { validationResult } = require('express-validator');
 const { internalServerErrorPage, notFoundPage } = require('./error');
-const { sequelizeErrorNames } = require('../../config/constants');
 const { UserGame, UserGameBiodata, UserGameHistory } = require('../../database/models');
-const { generateFlash, generateRenderObject,getDataBySpecificField } = require('../../helper');
+const { generateFlash, generateFlashObject, generateRenderObject, getDataBySpecificField } = require('../../helper');
 
 const getUserGameById = getDataBySpecificField(UserGame, 'id');
 const getUserGameBiodataById = getDataBySpecificField(UserGameBiodata, 'id');
@@ -13,12 +12,7 @@ const generateUserGameDetailRenderObject = (req, userGame) => {
         scripts: ['../../../js/user-game-detail.js', '../../../js/global.js'],
         extras: {
             userGame,
-            flash: {
-                message: req.flash('message') || '',
-                type: req.flash('type') || '',
-                svg: req.flash('svg') || '',
-                errors: req.flash('errors') || [],
-            },
+            flash: generateFlashObject(req)
         }
     });
 }
@@ -27,17 +21,15 @@ module.exports = {
     createUserGameBiodata: async (req, res) => {
         try {
             const errors = validationResult(req);
-
             const userGame = await getUserGameById(req.params.id, [
-                { model: UserGameBiodata, },
-                { model: UserGameHistory, }
+                { model: UserGameBiodata },
+                { model: UserGameHistory }
             ]);
 
             if (!errors.isEmpty()) {
                 generateFlash(req, { type: 'danger', errors: errors.array() });
                 return res.status(400).render('user-game-detail', generateUserGameDetailRenderObject(req, userGame));
             }
-
             if (!userGame) return notFoundPage(req, res);
 
             await UserGameBiodata.create(req.body);
@@ -45,23 +37,21 @@ module.exports = {
             generateFlash(req, { type: 'success', message: `User Game Biodata ${userGame.username} has been created` });
             res.status(201).redirect(`/view/user_game/${userGame.id}`);
         } catch (error) {
-            if (sequelizeErrorNames.includes(error.name)) {
-                notFoundPage(req, res);
-            } else {
-                internalServerErrorPage(error, req, res);
-            }
+            internalServerErrorPage(error, req, res);
         }
     },
     updateUserGameBiodataById: async (req, res) => {
         try {
             const errors = validationResult(req);
-
             const userGame = await getUserGameById(req.params.id, [
-                { model: UserGameBiodata, },
-                { model: UserGameHistory, }
+                { model: UserGameBiodata },
+                { model: UserGameHistory }
             ]);
             const userGameBiodata = await getUserGameBiodataById(req.body.userGameBiodataId);
             const updatedData = {};
+
+            if (!userGame) return notFoundPage(req, res);
+            if (!userGameBiodata) return notFoundPage(req, res);
 
             if (userGameBiodata.email !== req.body.email) updatedData.email = req.body.email;
             if (userGameBiodata.firstname !== req.body.firstname) updatedData.firstname = req.body.firstname;
@@ -73,7 +63,6 @@ module.exports = {
                 generateFlash(req, { type: 'info', message: 'No changes has been made' });
                 return res.status(200).redirect(`/view/user_game/${userGame.id}`);
             }
-
             if (userGameBiodata.email !== req.body.email) {
                 if (!errors.isEmpty()) {
                     generateFlash(req, { type: 'danger', errors: errors.array() });
@@ -81,19 +70,12 @@ module.exports = {
                 }
             }
 
-            if (!userGame) return notFoundPage(req, res);
-            if (!userGameBiodata) return notFoundPage(req, res);
-
             await userGameBiodata.update(updatedData);
 
             generateFlash(req, { type: 'success', message: `User Game Biodata ${userGame.username} has been updated` })
             res.status(200).redirect(`/view/user_game/${userGame.id}`);
         } catch (error) {
-            if (sequelizeErrorNames.includes(error.name)) {
-                notFoundPage(req, res);
-            } else {
-                internalServerErrorPage(error, req, res);
-            }
+            internalServerErrorPage(error, req, res);
         }
     },
     deleteUserGameBiodataById: async (req, res) => {
@@ -115,5 +97,5 @@ module.exports = {
         } catch (error) {
             internalServerErrorPage(error, req, res);
         }
-    },
+    }
 }

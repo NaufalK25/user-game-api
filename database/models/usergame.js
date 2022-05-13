@@ -11,12 +11,8 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            this.hasOne(models.UserGameBiodata, {
-                foreignKey: 'userGameId',
-            });
-            this.hasMany(models.UserGameHistory, {
-                foreignKey: 'userGameId',
-            });
+            this.hasOne(models.UserGameBiodata, { foreignKey: 'userGameId' });
+            this.hasMany(models.UserGameHistory, { foreignKey: 'userGameId' });
         }
     }
     UserGame.init({
@@ -24,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         password: DataTypes.STRING
     }, {
         sequelize,
-        modelName: 'UserGame',
+        modelName: 'UserGame'
     });
     return UserGame;
 };
