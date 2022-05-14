@@ -23,6 +23,20 @@ jobs:
           echo PROD_DB_PASS=${{ secrets.PROD_DB_PASS }} >> .env
           echo PROD_DB_USER=${{ secrets.PROD_DB_USER }} >> .env
           cat .env
+      - name: Echo env
+        run: |
+          echo "BASE_URL: ${{ secrets.BASE_URL }}"
+          echo "HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}"
+          echo "HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}"
+          echo "HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}"
+          echo "NODE_ENV: ${{ secrets.NODE_ENV }}"
+          echo "PGSSLMODE: ${{ secrets.PGSSLMODE }}"
+          echo "PORT: ${{ secrets.PORT }}"
+          echo "PROD_DB_DIALECT: ${{ secrets.PROD_DB_DIALECT }}"
+          echo "PROD_DB_HOST: ${{ secrets.PROD_DB_HOST }}"
+          echo "PROD_DB_NAME: ${{ secrets.PROD_DB_NAME }}"
+          echo "PROD_DB_PASS: ${{ secrets.PROD_DB_PASS }}"
+          echo "PROD_DB_USER: ${{ secrets.PROD_DB_USER }}"
 
   build:
     runs-on: ubuntu-latest
