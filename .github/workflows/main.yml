@@ -10,18 +10,18 @@ jobs:
       - name: Create env file
         run: |
           touch .env
-          echo "BASE_URL=${{ CI/CD.BASE_URL }}" >> .env
-          echo "HEROKU_API_KEY=${{ CI/CD.HEROKU_API_KEY }}" >> .env
-          echo "HEROKU_APP_NAME=${{ CI/CD.HEROKU_APP_NAME }}" >> .env
-          echo "HEROKU_EMAIL=${{ CI/CD.HEROKU_EMAIL }}" >> .env
-          echo "NODE_ENV=${{ CI/CD.NODE_ENV }}" >> .env
-          echo "PGSSLMODE=${{ CI/CD.PGSSLMODE }}" >> .env
-          echo "PORT=${{ CI/CD.PORT }}" >> .env
-          echo "PROD_DB_DIALECT=${{ CI/CD.PROD_DB_DIALECT }}" >> .env
-          echo "PROD_DB_HOST=${{ CI/CD.PROD_DB_HOST }}" >> .env
-          echo "PROD_DB_NAME=${{ CI/CD.PROD_DB_NAME }}" >> .env
-          echo "PROD_DB_PASS=${{ CI/CD.PROD_DB_PASS }}" >> .env
-          echo "PROD_DB_USER=${{ CI/CD.PROD_DB_USER }}" >> .env
+          echo BASE_URL=${{ "CI/CD".BASE_URL }} >> .env
+          echo HEROKU_API_KEY=${{ "CI/CD".HEROKU_API_KEY }} >> .env
+          echo HEROKU_APP_NAME=${{ "CI/CD".HEROKU_APP_NAME }} >> .env
+          echo HEROKU_EMAIL=${{ "CI/CD".HEROKU_EMAIL }} >> .env
+          echo NODE_ENV=${{ "CI/CD".NODE_ENV }} >> .env
+          echo PGSSLMODE=${{ "CI/CD".PGSSLMODE }} >> .env
+          echo PORT=${{ "CI/CD".PORT }} >> .env
+          echo PROD_DB_DIALECT=${{ "CI/CD".PROD_DB_DIALECT }} >> .env
+          echo PROD_DB_HOST=${{ "CI/CD".PROD_DB_HOST }} >> .env
+          echo PROD_DB_NAME=${{ "CI/CD".PROD_DB_NAME }} >> .env
+          echo PROD_DB_PASS=${{ "CI/CD".PROD_DB_PASS }} >> .env
+          echo PROD_DB_USER=${{ "CI/CD".PROD_DB_USER }} >> .env
           cat .env
       - uses: actions/checkout@v2
       - name: Use Node.js
