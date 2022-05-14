@@ -28,33 +28,27 @@ jobs:
     runs-on: ubuntu-latest
     needs: [ envfile ]
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: "14.x"
-      - name: Install yarn
-        uses: sergioramos/yarn-actions/install@v6
-        env:
-          NODE_ENV: $NODE_ENV
-          PGSSLMODE: $PGSSLMODE
-          PROD_DB_DIALECT: $PROD_DB_DIALECT
-          PROD_DB_HOST: $PROD_DB_HOST
-          PROD_DB_USER: $PROD_DB_USER
-          PROD_DB_PASS: $PROD_DB_PASS
-          PROD_DB_NAME: $PROD_DB_NAME
-        with:
-         frozen-lockfile: true
-      - name: Install dependencies
-        run: yarn install
+    #   - uses: actions/checkout@v2
+    #   - name: Use Node.js
+    #     uses: actions/setup-node@v2
+    #     with:
+    #       node-version: "14.x"
+    #   - name: Install yarn
+    #     uses: sergioramos/yarn-actions/install@v6
+    #     with:
+    #      frozen-lockfile: true
+    #   - name: Install dependencies
+    #     run: yarn install
+      - name: Print env
+        run: echo "${{ secrets.PROD_DB_DIALECT }}"
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [ envfile, build ]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: $HEROKU_API_KEY
-          heroku_app_name: $HEROKU_APP_NAME
-          heroku_email: $HEROKU_EMAIL
+#   deploy:
+#     runs-on: ubuntu-latest
+#     needs: [ envfile, build ]
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: akhileshns/heroku-deploy@v3.12.12
+#         with:
+#           heroku_api_key: $HEROKU_API_KEY
+#           heroku_app_name: $HEROKU_APP_NAME
+#           heroku_email: $HEROKU_EMAIL
