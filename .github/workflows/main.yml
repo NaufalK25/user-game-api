@@ -40,7 +40,7 @@ jobs:
     #   - name: Install dependencies
     #     run: yarn install
       - name: Print env
-        run: echo "${{ secrets.PROD_DB_DIALECT }}"
+        run: echo $PROD_DB_DIALECT
 
 #   deploy:
 #     runs-on: ubuntu-latest
