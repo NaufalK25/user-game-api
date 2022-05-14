@@ -7,6 +7,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Create env file
+        run: |
+          touch .env
+          echo BASE_URL=${{ secrets.BASE_URL }} >> .env
+          echo HEROKU_API_KEY=${{ secrets.HEROKU_API_KEY }} >> .env
+          echo HEROKU_APP_NAME=${{ secrets.HEROKU_APP_NAME }} >> .env
+          echo HEROKU_EMAIL=${{ secrets.HEROKU_EMAIL }} >> .env
+          echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
+          echo PGSSLMODE=${{ secrets.PGSSLMODE }} >> .env
+          echo PORT=${{ secrets.PORT }} >> .env
+          echo PROD_DB_DIALECT=${{ secrets.PROD_DB_DIALECT }} >> .env
+          echo PROD_DB_HOST=${{ secrets.PROD_DB_HOST }} >> .env
+          echo PROD_DB_NAME=${{ secrets.PROD_DB_NAME }} >> .env
+          echo PROD_DB_PASS=${{ secrets.PROD_DB_PASS }} >> .env
+          echo PROD_DB_USER=${{ secrets.PROD_DB_USER }} >> .env
+          cat .env
       - uses: actions/checkout@v2
       - name: Use Node.js
         uses: actions/setup-node@v2
