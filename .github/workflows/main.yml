@@ -10,18 +10,18 @@ jobs:
       - name: Create env file
         run: |
           touch .env
-          echo "BASE_URL=$BASE_URL" >> .env
-          echo "HEROKU_API_KEY=$HEROKU_API_KEY" >> .env
-          echo "HEROKU_APP_NAME=$HEROKU_APP_NAME" >> .env
-          echo "HEROKU_EMAIL=$HEROKU_EMAIL" >> .env
-          echo "NODE_ENV=$NODE_ENV" >> .env
-          echo "PGSSLMODE=$PGSSLMODE" >> .env
-          echo "PORT=$PORT" >> .env
-          echo "PROD_DB_DIALECT=$PROD_DB_DIALECT" >> .env
-          echo "PROD_DB_HOST=$PROD_DB_HOST" >> .env
-          echo "PROD_DB_NAME=$PROD_DB_NAME" >> .env
-          echo "PROD_DB_PASS=$PROD_DB_PASS" >> .env
-          echo "PROD_DB_USER=$PROD_DB_USER" >> .env
+          echo "BASE_URL=${{ BASE_URL }}" >> .env
+          echo "HEROKU_API_KEY=${{ HEROKU_API_KEY }}" >> .env
+          echo "HEROKU_APP_NAME=${{ HEROKU_APP_NAME }}" >> .env
+          echo "HEROKU_EMAIL=${{ HEROKU_EMAIL }}" >> .env
+          echo "NODE_ENV=${{ NODE_ENV }}" >> .env
+          echo "PGSSLMODE=${{ PGSSLMODE }}" >> .env
+          echo "PORT=${{ PORT }}" >> .env
+          echo "PROD_DB_DIALECT=${{ PROD_DB_DIALECT }}" >> .env
+          echo "PROD_DB_HOST=${{ PROD_DB_HOST }}" >> .env
+          echo "PROD_DB_NAME=${{ PROD_DB_NAME }}" >> .env
+          echo "PROD_DB_PASS=${{ PROD_DB_PASS }}" >> .env
+          echo "PROD_DB_USER=${{ PROD_DB_USER }}" >> .env
           cat .env
       - uses: actions/checkout@v2
       - name: Use Node.js
