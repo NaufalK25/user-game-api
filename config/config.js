@@ -22,6 +22,7 @@ module.exports = {
         database: process.env.PROD_DB_NAME,
         host: process.env.PROD_DB_HOST,
         dialect: process.env.PROD_DB_DIALECT || 'postgres',
+        url: `${process.env.PROD_DB_DIALECT}://${process.env.PROD_DB_USER}:${process.env.PROD_DB_PASS}@${process.env.PROD_DB_HOST}:5432/${process.env.PROD_DB_NAME}`,
         logging: false,
         ssl: {
             rejectUnauthorized: false
