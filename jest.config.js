@@ -29,7 +29,9 @@ module.exports = {
     coveragePathIgnorePatterns: [
       "\\\\node_modules\\\\",
       "\\\\controllers\\\\views\\\\",
-      "\\\\routes\\\\views\\\\"
+      "\\\\routes\\\\views\\\\",
+      "\\\\middlewares\\\\passportLocal.js",
+      "\\\\test_backup\\\\"
     ],
 
     // Indicates which provider should be used to instrument code for coverage
@@ -157,7 +159,9 @@ module.exports = {
     testPathIgnorePatterns: [
       "\\\\node_modules\\\\",
       "\\\\controllers\\\\views\\\\",
-      "\\\\routes\\\\views\\\\"
+      "\\\\routes\\\\views\\\\",
+      "\\\\middlewares\\\\passportLocal.js",
+      "\\\\test_backup\\\\"
     ],
 
     // The regexp pattern or array of patterns that Jest uses to detect test files

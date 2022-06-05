@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     UserGameHistory.init({
         title: DataTypes.STRING,
         publisher: DataTypes.STRING,
+        cover: DataTypes.STRING,
         lastPlayed: DataTypes.DATE,
         score: DataTypes.INTEGER
     }, {

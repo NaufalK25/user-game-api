@@ -1,16 +1,18 @@
+const fs = require('fs');
 const { validationResult } = require('express-validator');
 const { internalServerErrorPage, notFoundPage } = require('./error');
+const { baseUrl } = require('../../config/constants');
 const { UserGame, UserGameBiodata, UserGameHistory } = require('../../database/models');
-const { generateFlash, generateFlashObject, generateRenderObject, getDataBySpecificField } = require('../../helper');
+const { generateFlash, generateFlashObject, generateRenderObject } = require('../../helper');
 
-const getUserGameById = getDataBySpecificField(UserGame, 'id');
-const getUserGameHistoryById = getDataBySpecificField(UserGameHistory, 'id');
-
+const unlinkGameCoverPath = `${__dirname}/../../uploads/games/`;
 const generateUserGameDetailRenderObject = (req, userGame) => {
     return generateRenderObject({
         title: `User Game Detail - ${userGame.username}`,
         scripts: ['../../../js/user-game-detail.js', '../../../js/global.js'],
         extras: {
+            baseUrl,
+            loggedInUser: req.user,
             userGame,
             flash: generateFlashObject(req)
         }
@@ -21,10 +23,13 @@ module.exports = {
     createUserGameHistory: async (req, res) => {
         try {
             const errors = validationResult(req);
-            const userGame = await getUserGameById(req.params.id, [
-                { model: UserGameBiodata },
-                { model: UserGameHistory }
-            ]);
+
+            const userGame = await UserGame.findByPk(req.params.id, {
+                include: [
+                    { model: UserGameBiodata },
+                    { model: UserGameHistory }
+                ]
+            });
 
             if (!errors.isEmpty()) {
                 generateFlash(req, { type: 'danger', errors: errors.array() });
@@ -32,7 +37,11 @@ module.exports = {
             }
             if (!userGame) return notFoundPage(req, res);
 
-            await UserGameHistory.create({ ...req.body, lastPlayed: new Date() });
+            await UserGameHistory.create({
+                ...req.body,
+                cover: req.file ? req.file.filename : 'default-cover.jpg',
+                lastPlayed: new Date()
+            });
 
             generateFlash(req, { type: 'success', message: `User Game History has been created` });
             res.status(201).redirect(`/view/user_game/${userGame.id}`);
@@ -43,20 +52,31 @@ module.exports = {
     updateUserGameHistoryById: async (req, res) => {
         try {
             const errors = validationResult(req);
-            const userGame = await getUserGameById(req.params.id, [
-                { model: UserGameBiodata },
-                { model: UserGameHistory }
-            ]);
-            const userGameHistory = await getUserGameHistoryById(req.body.userGameHistoryId);
+            const userGame = await UserGame.findByPk(req.params.id, {
+                include: [
+                    { model: UserGameBiodata },
+                    { model: UserGameHistory }
+                ]
+            });
+            const userGameHistory = await UserGameHistory.findByPk(req.body.userGameHistoryId);
             const updatedData = {};
+            const gameCover = req.file ? req.file.filename : 'default-cover.jpg';
 
             if (!userGame) return notFoundPage(req, res);
             if (!userGameHistory) return notFoundPage(req, res);
 
-            if (userGameHistory.title !== req.body.title) updatedData.title = req.body.title;
-            if (userGameHistory.publisher !== req.body.publisher) updatedData.publisher = req.body.publisher;
-            if (userGameHistory.score !== req.body.score) updatedData.score = req.body.score;
-
+            if (Object.keys(req.body).length > 0) {
+                const { title, publisher, score } = req.body;
+                if (userGameHistory.title !== title) updatedData.title = title;
+                if (userGameHistory.publisher !== publisher) updatedData.publisher = publisher;
+                if (userGameHistory.score !== score) updatedData.score = score;
+            }
+            if (req.file && gameCover !== 'default-cover.jpg') {
+                updatedData.cover = gameCover;
+                fs.unlink(`${unlinkGameCoverPath}${userGameHistory.cover}`, err => {
+                    if (err) return internalServerErrorPage(err, req, res);
+                });
+            }
 
             if (Object.keys(updatedData).length === 0) {
                 generateFlash(req, { type: 'info', message: 'No changes has been made' });
@@ -81,11 +101,17 @@ module.exports = {
 
             if (!errors.isEmpty()) return notFoundPage(req, res);
 
-            const userGame = await getUserGameById(req.params.id);
-            const userGameHistory = await getUserGameHistoryById(req.body.userGameHistoryId);
+            const userGame = await UserGame.findByPk(req.params.id);
+            const userGameHistory = await UserGameHistory.findByPk(req.body.userGameHistoryId);
 
             if (!userGame) return notFoundPage(req, res);
             if (!userGameHistory) return notFoundPage(req, res);
+
+            if (userGameHistory.cover !== 'default-cover.jpg') {
+                fs.unlink(`${unlinkGameCoverPath}${userGameHistory.cover}`, err => {
+                    if (err) return internalServerErrorPage(err, req, res);
+                });
+            }
 
             await userGameHistory.destroy();
 

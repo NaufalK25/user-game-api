@@ -6,14 +6,6 @@ const getEndpoint = (endpoint = '/api/v1') => {
     return (endpoint === '/') ? endpoint : endpoint.replace(/\/$/, '');
 }
 
-const getDataBySpecificField = (model, field) => {
-    if (!model && !field) return [];
-    return async (value, include = []) => {
-        if (!value) return [];
-        return await model.findOne({ where: { [field]: value }, include });
-    }
-}
-
 const generateRenderObject = ({ title = 'User Game API', scripts = [], styles = [], extras = {} } = {}) => {
     return {
         title,
@@ -61,7 +53,6 @@ const generateFlashObject = (req) => {
 }
 
 module.exports = {
-    getDataBySpecificField,
     getEndpoint,
     generateRenderObject,
     generateErrorRenderObject,

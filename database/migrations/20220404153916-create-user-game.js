@@ -10,10 +10,24 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             username: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
+                allowNull: false,
+                unique: true
             },
             password: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
+                allowNull: false
+            },
+            roleId: {
+                type: Sequelize.INTEGER,
+                references: {
+                    model: 'Roles',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'SET NULL',
+                allowNull: false,
+                defaultValue: 2
             },
             createdAt: {
                 allowNull: false,

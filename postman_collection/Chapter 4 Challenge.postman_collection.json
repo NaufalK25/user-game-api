@@ -1,453 +1,453 @@
 {
-	"info": {
-		"_postman_id": "1e936039-be07-4e27-bdbf-dbd6af0c74a4",
-		"name": "Chapter 4 Challenge",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "User Game",
-			"item": [
-				{
-					"name": "getAllUserGames",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:3000/api/v1/user_games",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_games"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "createUserGame",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"kwww1\",\r\n    \"password\": \"qwerty\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/api/v1/user_games",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_games"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getUserGameById",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:3000/api/v1/user_game/1",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_game",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "updateUserGame",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"kw-5\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/api/v1/user_game/3",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_game",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "deleteUsserGame",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "localhost:3000/api/v1/user_game/3",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_game",
-								"3"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "User Game Biodata",
-			"item": [
-				{
-					"name": "getAllUserGameBiodatas",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/api/v1/user_games/biodatas",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_games",
-								"biodatas"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "createUserGameBiodata",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"johndoe12@gmail.com\",\r\n    \"firstname\": \"John\",\r\n    \"lastname\": \"Doe\",\r\n    \"country\": \"USA\",\r\n    \"age\": 25,\r\n    \"userGameId\": 2\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/api/v1/user_games/biodatas",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_games",
-								"biodatas"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getUserGameBiodataById",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:3000/api/v1/user_game/biodata/1",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_game",
-								"biodata",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "updateUserGameBiodata",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"john.doe@gmail.com\",\r\n    \"age\": 24\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/api/v1/user_game/biodata/2",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_game",
-								"biodata",
-								"2"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "deleteUserGameBiodata",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "localhost:3000/api/v1/user_game/biodata/2",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_game",
-								"biodata",
-								"2"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "findBiodataByUserGameId",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:3000/api/v1/user_game/1/biodata",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_game",
-								"1",
-								"biodata"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "User Game History",
-			"item": [
-				{
-					"name": "getAllUserGameHistories",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:3000/api/v1/user_games/histories",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_games",
-								"histories"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "createUserGameHistory",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Clash of Clans\",\r\n    \"publisher\": \"Supercell\",\r\n    \"score\": 80,\r\n    \"userGameId\": 2\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/api/v1/user_games/histories",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_games",
-								"histories"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "getUserGameHistoryById",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:3000/api/v1/user_game/history/3",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_game",
-								"history",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "updateUserGameHistory",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"score\": 80,\r\n    \"userGameId\": 1\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/api/v1/user_game/history/3",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_game",
-								"history",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "deleteUserGameHistory",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "localhost:3000/api/v1/user_game/history/3",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_game",
-								"history",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "findHistoriesByUserGameId",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:3000/api/v1/user_game/1/history",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"v1",
-								"user_game",
-								"1",
-								"history"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	]
+    "info": {
+        "_postman_id": "1e936039-be07-4e27-bdbf-dbd6af0c74a4",
+        "name": "Chapter 4 Challenge",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "User Game",
+            "item": [
+                {
+                    "name": "getAllUserGames",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_games",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_games"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "createUserGame",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"username\": \"kwww1\",\r\n    \"password\": \"qwerty\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_games",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_games"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getUserGameById",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_game/1",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_game",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "updateUserGame",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"username\": \"kw-5\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_game/3",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_game",
+                                "3"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "deleteUsserGame",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_game/3",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_game",
+                                "3"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "User Game Biodata",
+            "item": [
+                {
+                    "name": "getAllUserGameBiodatas",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_games/biodatas",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_games",
+                                "biodatas"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "createUserGameBiodata",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"email\": \"johndoe12@gmail.com\",\r\n    \"firstname\": \"John\",\r\n    \"lastname\": \"Doe\",\r\n    \"country\": \"USA\",\r\n    \"age\": 25,\r\n    \"userGameId\": 2\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_games/biodatas",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_games",
+                                "biodatas"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getUserGameBiodataById",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_game/biodata/1",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_game",
+                                "biodata",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "updateUserGameBiodata",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"email\": \"john.doe@gmail.com\",\r\n    \"age\": 24\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_game/biodata/2",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_game",
+                                "biodata",
+                                "2"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "deleteUserGameBiodata",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_game/biodata/2",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_game",
+                                "biodata",
+                                "2"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "findBiodataByUserGameId",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_game/1/biodata",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_game",
+                                "1",
+                                "biodata"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "User Game History",
+            "item": [
+                {
+                    "name": "getAllUserGameHistories",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_games/histories",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_games",
+                                "histories"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "createUserGameHistory",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"title\": \"Clash of Clans\",\r\n    \"publisher\": \"Supercell\",\r\n    \"score\": 80,\r\n    \"userGameId\": 2\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_games/histories",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_games",
+                                "histories"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "getUserGameHistoryById",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_game/history/3",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_game",
+                                "history",
+                                "3"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "updateUserGameHistory",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"score\": 80,\r\n    \"userGameId\": 1\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_game/history/3",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_game",
+                                "history",
+                                "3"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "deleteUserGameHistory",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_game/history/3",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_game",
+                                "history",
+                                "3"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "findHistoriesByUserGameId",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "localhost:3000/api/v1/user_game/1/histories",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "3000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "user_game",
+                                "1",
+                                "history"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
 }

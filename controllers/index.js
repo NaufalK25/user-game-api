@@ -5,7 +5,7 @@ const root = (req, res) => {
         statusCode: 200,
         message: 'Welcome to the API',
         developer: 'Muhammad Naufal Kateni',
-        documentation: `${baseUrl}/api-docs`,
+        documentation: `${baseUrl}/docs`,
         apiLogin: `${baseUrl}/api/v1/login`,
         api: `${baseUrl}/api/v1/user_games`,
         viewLogin: `${baseUrl}/view/login`,

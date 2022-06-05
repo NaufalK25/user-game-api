@@ -9,11 +9,44 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            time: {
-                type: Sequelize.DATE
+            title: {
+                type: Sequelize.STRING,
+                allowNull: false
+            },
+            publisher: {
+                type: Sequelize.STRING,
+                allowNull: false
+            },
+            cover: {
+                type: Sequelize.STRING,
+                allowNull: false,
+                defaultValue: 'default-cover.jpg'
+            },
+            lastPlayed: {
+                type: Sequelize.DATE,
+                allowNull: false,
+                defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+                validate: {
+                    isDate: true
+                }
             },
             score: {
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                validate: {
+                    isInt: true,
+                    min: 0
+                }
+            },
+            userGameId: {
+                type: Sequelize.INTEGER,
+                references: {
+                    model: 'UserGames',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'SET NULL',
+                allowNull: false
             },
             createdAt: {
                 allowNull: false,

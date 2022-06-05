@@ -4,6 +4,7 @@ createUserGameBiodataModalButton?.addEventListener('click', () => {
     const emailInput = document.querySelector('input#email');
     const firstnameInput = document.querySelector('input#firstname');
     const lastnameInput = document.querySelector('input#lastname');
+    const profilePictureInput = document.querySelector('input#profilePicture');
     const ageInput = document.querySelector('input#age');
     const countryInput = document.querySelector('input#country');
 
@@ -16,8 +17,9 @@ createUserGameBiodataModalButton?.addEventListener('click', () => {
         emailInput.value = '';
         firstnameInput.value = '';
         lastnameInput.value = '';
+        profilePictureInput.value = '';
         ageInput.value = '';
-        countryInput.value = '';
+        countryInput.value = 'Choose your country...';
 
         setTimeout(() => {
             emailInput.focus();
@@ -26,10 +28,10 @@ createUserGameBiodataModalButton?.addEventListener('click', () => {
 });
 
 const updateUserGameBiodataModalButton = document.querySelector('button#updateUserGameBiodataModalButton');
-
 updateUserGameBiodataModalButton?.addEventListener('click', () => {
     const emailInput = document.querySelector('input#email');
     const firstnameInput = document.querySelector('input#firstname');
+    const profilePictureInput = document.querySelector('input#profilePicture');
     const lastnameInput = document.querySelector('input#lastname');
     const ageInput = document.querySelector('input#age');
     const countryInput = document.querySelector('input#country');
@@ -43,6 +45,7 @@ updateUserGameBiodataModalButton?.addEventListener('click', () => {
         emailInput.value = emailInput.dataset.oldvalue;
         firstnameInput.value = firstnameInput.dataset.oldvalue;
         lastnameInput.value = lastnameInput.dataset.oldvalue;
+        profilePictureInput.value = '';
         ageInput.value = ageInput.dataset.oldvalue;
         countryInput.value = countryInput.dataset.oldvalue;
 
@@ -52,11 +55,25 @@ updateUserGameBiodataModalButton?.addEventListener('click', () => {
     });
 });
 
+const updateCountryOptions = document.querySelector('datalist#updateCountryOptions');
+fetch('https://restcountries.com/v2/all?fields=name')
+    .then(response => response.json())
+    .then(countries => {
+        countries.forEach(country => {
+            const countryInput = document.querySelector('input#country');
+            const option = document.createElement('option');
+            option.value = country.name;
+            if (country.name === countryInput.dataset.oldvalue) option.selected = true;
+            updateCountryOptions?.appendChild(option);
+        });
+    });
+
 const createUserGameHistoryModalButton = document.querySelector('button#createUserGameHistoryModalButton');
 
 createUserGameHistoryModalButton.addEventListener('click', () => {
     const titleInput = document.querySelector('input#title');
     const publisherInput = document.querySelector('input#publisher');
+    const coverInput = document.querySelector('input#cover');
     const scoreInput = document.querySelector('input#score');
 
     setTimeout(() => {
@@ -67,6 +84,7 @@ createUserGameHistoryModalButton.addEventListener('click', () => {
     createUserGameHistoryModalClearButton.addEventListener('click', () => {
         titleInput.value = '';
         publisherInput.value = '';
+        coverInput.value = '';
         scoreInput.value = '';
 
         setTimeout(() => {
@@ -82,6 +100,7 @@ updateUserGameHistoryModalButtons.forEach(updateUserGameHistoryModalButton => {
         const historyId = updateUserGameHistoryModalButton.dataset.usergamehistoryid;
         const titleInput = document.querySelector(`input#title-update-${historyId}`);
         const publisherInput = document.querySelector(`input#publisher-update-${historyId}`);
+        const coverInput = document.querySelector(`input#cover-update-${historyId}`);
         const scoreInput = document.querySelector(`input#score-update-${historyId}`);
 
         setTimeout(() => {
@@ -92,6 +111,7 @@ updateUserGameHistoryModalButtons.forEach(updateUserGameHistoryModalButton => {
         updateUserGameHistoryModalResetButton.addEventListener('click', () => {
             titleInput.value = titleInput.dataset.oldvalue;
             publisherInput.value = publisherInput.dataset.oldvalue;
+            coverInput.value = '';
             scoreInput.value = scoreInput.dataset.oldvalue;
 
             setTimeout(() => {
@@ -101,7 +121,6 @@ updateUserGameHistoryModalButtons.forEach(updateUserGameHistoryModalButton => {
 
     });
 });
-
 
 const userGameHistoryScores = document.querySelectorAll('h6.userGameHistoryScore');
 Array.from(userGameHistoryScores).map(score => {

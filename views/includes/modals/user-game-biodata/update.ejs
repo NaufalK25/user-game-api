@@ -5,11 +5,11 @@
                 <h5 class="modal-title" id="updateUserGameBiodataModalLabel">Update <%= userGame.username %>'s User Game Biodata</h5>
                 <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="/view/user_game/<%= userGame.id %>/biodata?_method=PATCH" method="POST">
+            <form action="/view/user_game/<%= userGame.id %>/biodata?_method=PATCH" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="userGameId" value="<%= userGame.id %>">
                 <input type="hidden" name="userGameBiodataId" value="<%= userGame.UserGameBiodatum.id %>">
                 <div class="modal-body d-flex flex-column" style="gap:1rem;">
-                    <div class="input-group">
+                    <div class="input-group" title="Email">
                         <span class="input-group-text" id="basic-addon-email">
                             <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
                                 <path d="M0 0h24v24H0V0z" fill="none" />
@@ -19,7 +19,7 @@
                         <input type="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon-email" name="email" id="email" data-oldvalue="<%= userGame.UserGameBiodatum.email %>" value="<%= userGame.UserGameBiodatum.email %>" required>
                     </div>
                     <div class="d-flex" style="gap:1rem;">
-                        <div class="input-group">
+                        <div class="input-group" title="Firstname">
                             <span class="input-group-text" id="basic-addon-firstname">
                                 <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
                                     <path d="M0 0h24v24H0V0z" fill="none" />
@@ -28,7 +28,7 @@
                             </span>
                             <input type="text" class="form-control" placeholder="Firstname" aria-label="Firstname" aria-describedby="basic-addon-firstname" name="firstname" id="firstname" data-oldvalue="<%= userGame.UserGameBiodatum.firstname %>" value="<%= userGame.UserGameBiodatum.firstname %>" required>
                         </div>
-                        <div class="input-group">
+                        <div class="input-group" title="Lastname">
                             <span class="input-group-text" id="basic-addon-lastname">
                                 <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
                                     <path d="M0 0h24v24H0V0z" fill="none" />
@@ -38,7 +38,16 @@
                             <input type="text" class="form-control" placeholder="Lastname" aria-label="Lastname" aria-describedby="basic-addon-lastname" name="lastname" id="lastname" data-oldvalue="<%= userGame.UserGameBiodatum.lastname %>" value="<%= userGame.UserGameBiodatum.lastname %>" required>
                         </div>
                     </div>
-                    <div class="input-group">
+                    <div class="input-group" title="Profile Picture">
+                        <span class="input-group-text" id="basic-addon-profilePicture">
+                            <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                                <path d="M0 0h24v24H0V0z" fill="none" />
+                                <path d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 10c2.7 0 5.8 1.29 6 2H6c.23-.72 3.31-2 6-2m0-12C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                            </svg>
+                        </span>
+                        <input type="file" class="form-control" aria-label="ProfilePicture" aria-describedby="basic-addon-profilePicture" id="profilePicture" name="profilePicture" accept="image/*" data-oldvalue="<%= userGame.UserGameBiodatum.profilePicture %>" value="<%= userGame.UserGameBiodatum.profilePicture %>">
+                    </div>
+                    <div class="input-group" title="Age">
                         <span class="input-group-text" id="basic-addon-age">
                             <svg enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
                                 <g>
@@ -51,14 +60,15 @@
                         </span>
                         <input type="number" min="1" class="form-control" placeholder="Age" aria-label="Age" aria-describedby="basic-addon-age" name="age" id="age" data-oldvalue="<%= userGame.UserGameBiodatum.age %>" value="<%= userGame.UserGameBiodatum.age %>" required>
                     </div>
-                    <div class="input-group">
+                    <div class="input-group" title="Country">
                         <span class="input-group-text" id="basic-addon-country">
                             <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
                                 <path d="M0 0h24v24H0V0z" fill="none" />
                                 <path d="M12.36 6l.4 2H18v6h-3.36l-.4-2H7V6h5.36M14 4H5v17h2v-7h5.6l.4 2h7V6h-5.6L14 4z" />
                             </svg>
                         </span>
-                        <input type="text" class="form-control" placeholder="Country" aria-label="Country" aria-describedby="basic-addon-country" name="country" id="country" data-oldvalue="<%= userGame.UserGameBiodatum.country %>" value="<%= userGame.UserGameBiodatum.country %>" required>
+                        <input class="form-control" list="updateCountryOptions" id="country" name="country" placeholder="Choose your country..." data-oldvalue="<%= userGame.UserGameBiodatum.country %>" value="<%= userGame.UserGameBiodatum.country %>" required>
+                        <datalist id="updateCountryOptions"></datalist>
                     </div>
                 </div>
                 <div class="modal-footer">

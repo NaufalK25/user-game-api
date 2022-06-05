@@ -8,26 +8,48 @@
             </h3>
             <span class="badge bg-primary rounded-pill" style="width:fit-content;height:fit-content;"><%= userGame.username %></span>
         </div>
-        <p class="m-0 fw-bold">Email: <span class="fst-italic fw-normal"><%= userGame.UserGameBiodatum?.email || '-' %></span></p>
-        <p class="m-0 fw-bold">Country: <span class="fw-normal"><%= userGame.UserGameBiodatum?.country || '-' %></span></p>
-        <p class="m-0 fw-bold">Age: <span class="fw-normal"><%= userGame.UserGameBiodatum?.age || '-' %></span></p>
+        <div class="d-flex justify-content-center align-items-center flex-column" style="gap:1rem 0;">
+            <% if (userGame.UserGameBiodatum) { %>
+            <% if (userGame.UserGameBiodatum.profilePicture.startsWith('http')) { %>
+            <img src="<%= userGame.UserGameBiodatum?.profilePicture %>" alt="<%= userGame.username %>" style="width:15rem;height:15rem;">
+            <% } else { %>
+            <img src="<%= baseUrl %>/uploads/profiles/<%= userGame.UserGameBiodatum.profilePicture %>" alt="<%= userGame.username %>" style="width:15rem;height:15rem;">
+            <% } %>
+            <% } else { %>
+            <img src="/uploads/profiles/default-profile.png" alt="<%= userGame.username %>" style="width:15rem;height:15rem;">
+            <% } %>
+            <div>
+                <p class="m-0 fw-bold">Email: <span class="fst-italic fw-normal"><%= userGame.UserGameBiodatum?.email || '-' %></span></p>
+                <p class="m-0 fw-bold">Country: <span class="fw-normal"><%= userGame.UserGameBiodatum?.country || '-' %></span></p>
+                <p class="m-0 fw-bold">Age: <span class="fw-normal"><%= userGame.UserGameBiodatum?.age || '-' %></span></p>
+            </div>
+        </div>
 
         <div class="d-flex justify-content-center" style="gap:1rem;">
+            <% if (loggedInUser.roleId === 1 || loggedInUser.id === userGame.id) { %>
             <% if (userGame.UserGameBiodatum) { %>
             <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#updateUserGameBiodataModal" id="updateUserGameBiodataModalButton">Update</button>
             <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteUserGameBiodataModal">Delete</button>
             <% } else { %>
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserGameBiodataModal" id="createUserGameBiodataModalButton">Create Biodata</button>
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserGameBiodataModal" id="createUserGameBiodataModalButton">Edit Biodata</button>
+            <% } %>
             <% } %>
             <a href="/view/user_games" class="btn btn-outline-secondary">Back</a>
         </div>
 
         <div class="d-flex justify-content-center flex-column align-items-center" style="gap:1rem;">
             <h3 class="fw-bold border border-0 border-bottom border-dark m-0" style="width:fit-content;">Histories</h3>
+            <% if (loggedInUser.roleId === 1 || loggedInUser.id === userGame.id) { %>
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserGameHistoryModal" id="createUserGameHistoryModalButton">Create History</button>
+            <% } %>
             <div class="d-flex justify-content-center align-items-center flex-wrap" style="gap:1rem;">
                 <% for (history of userGame.UserGameHistories) { %>
                 <div class="border rounded text-center d-flex flex-column p-4" style="gap:1rem;">
+                    <% if (history.cover.startsWith('http')) { %>
+                    <img src="<%= history.cover %>" alt="<%= history.title %>" style="width:15rem;height:10rem">
+                    <% } else { %>
+                    <img src="<%= baseUrl %>/uploads/games/<%= history.cover %>" alt="<%= history.title %>" style="width:15rem;height:10rem">
+                    <% } %>
                     <p class="m-0"><%= history.title %></p>
                     <p class="text-muted m-0"><%= history.publisher %></p>
                     <%
@@ -43,13 +65,14 @@
                     <p class="m-0 fw-bold">Last Played: <span class="fw-normal fst-italic"><%= formattedDate %></span></p>
                     <h6 class="fw-bold m-0 fs-3 userGameHistoryScore"><%= history.score %></h6>
                     <div class="d-flex justify-content-center" style="gap:1rem;">
+                        <% if (loggedInUser.roleId === 1 || loggedInUser.id === userGame.id) { %>
                         <button type="button" class="btn btn-outline-warning updateUserGameHistoryModalButton" data-bs-toggle="modal" data-bs-target="#updateUserGameHistoryModal<%= history.id %>" data-usergamehistoryid="<%= history.id %>">Update</button>
                         <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteUserGameHistoryModal<%= history.id %>">Delete</button>
-
                         <% if (userGame.UserGameHistories.length > 0) { %>
                         <%- include('./includes/modals/user-game-history/update.ejs', { userGame, history }) %>
                         <%- include('./includes/modals/user-game-history/delete.ejs', { userGame, history }) %>
                         <%}  %>
+                        <% } %>
                     </div>
                 </div>
                 <% } %>
@@ -58,6 +81,7 @@
     </div>
 </main>
 
+<% if (loggedInUser.roleId === 1 || loggedInUser.id === userGame.id) { %>
 <% if (userGame.UserGameBiodatum) { %>
 <%- include('./includes/modals/user-game-biodata/update.ejs', { userGame }) %>
 <%- include('./includes/modals/user-game-biodata/delete', { userGame }) %>
@@ -66,3 +90,4 @@
 <% } %>
 
 <%- include('./includes/modals/user-game-history/create', { userGame }) %>
+<% } %>

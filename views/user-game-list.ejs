@@ -1,29 +1,71 @@
 <main class="p-3 d-flex justify-content-center align-items-center flex-column" style="flex:1 1 0%;gap:1rem 0;">
     <%- include('./includes/flash', { flash }) %>
 
-    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserGameModal" id="createUserGameModalButton">
-        Create User Game
-    </button>
-    <div class="container text-center d-flex justify-content-center align-items-center flex-wrap" style="gap:1rem;">
+    <div class="d-flex flex-column" style="gap:1rem 0;">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserGameModal" id="createUserGameModalButton" <% if (loggedInUser.roleId !== 1) { %> disabled <% } %>>
+            Create User Game
+        </button>
+        <small class="text-muted">*Only admin can create new user game</small>
+        <div class="d-flex justify-content-center">
+            <a href="/api/v1/user_games" title="API" class="btn" style="box-shadow:none;">
+                <svg height="40" width="40" fill="#ffc61a">
+                    <path d="M26.625 30 24.625 28 32.708 19.917 24.708 11.917 26.667 9.958 36.667 19.958ZM13.333 29.958 3.333 19.958 13.375 9.875 15.375 11.875 7.292 19.958 15.292 27.958Z" />
+                </svg>
+            </a>
+            <a href="/docs" title="Docs" class="btn" style="box-shadow:none;">
+                <svg height="40" width="40" fill="#60dcf5">
+                    <path d="M30 36.667H10Q8.625 36.667 7.646 35.688Q6.667 34.708 6.667 33.333V6.667Q6.667 5.292 7.646 4.313Q8.625 3.333 10 3.333H23.333L33.333 13.333V33.333Q33.333 34.708 32.354 35.688Q31.375 36.667 30 36.667ZM21.667 15V6.667H10V33.333H30V15ZM10 15V6.667V33.333ZM13.333 21.667H26.667V18.333H13.333ZM13.333 26.667H26.667V23.333H13.333ZM13.333 31.667H21.667V28.333H13.333Z" />
+                </svg>
+            </a>
+            <form action="/view/logout" method="POST">
+                <button type="submit" class="btn" style="box-shadow:none;">
+                    <svg height="40" width="40" fill="#e3626f">
+                        <path d="M15.417 18.625H29.625L25.375 14.375L27.333 12.375L35 20.042L27.375 27.625L25.417 25.625L29.667 21.375H15.417ZM19.75 5V7.792H7.792Q7.792 7.792 7.792 7.792Q7.792 7.792 7.792 7.792V32.208Q7.792 32.208 7.792 32.208Q7.792 32.208 7.792 32.208H19.75V35H7.792Q6.667 35 5.833 34.167Q5 33.333 5 32.208V7.792Q5 6.667 5.833 5.833Q6.667 5 7.792 5Z" />
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="text-center d-flex justify-content-center align-items-center flex-wrap" style="gap:1rem;">
         <% for (userGame of userGames) { %>
-        <div class="card" style="width:18rem;">
-            <div class="card-body d-flex flex-column justify-content-center align-items-center" style="gap:0.5rem;">
-                <h5 class="card-title m-0 fw-bold"><%= `${userGame.UserGameBiodatum?.firstname || userGame.username} ${userGame.UserGameBiodatum?.lastname || ''}` %></h5>
-                <h6 class="card-subtitle text-muted m-0"><%= userGame.username %></h6>
+        <div class="border rounded text-center d-flex flex-column p-4" style="gap:1rem;">
+            <div class="text-center">
+                <% if (userGame.UserGameBiodatum) { %>
+                <% if (userGame.UserGameBiodatum.profilePicture.startsWith('http')) { %>
+                <img src="<%= userGame.UserGameBiodatum.profilePicture %>" alt="<%= userGame.username %>" style="width:12.5rem;height:12.5rem">
+                <% } else {%>
+                <img src="<%= baseUrl %>/uploads/profiles/<%= userGame.UserGameBiodatum.profilePicture %>" alt="<%= userGame.username %>" style="width:12.5rem;height:12.5rem">
+                <% } %>
+                <% } else { %>
+                <img src="/uploads/profiles/default-profile.png" alt="<%= userGame.username %>" style="width:12.5rem;height:12.5rem">
+                <% } %>
+            </div>
+            <div class="d-flex flex-column justify-content-center align-items-center" style="gap:0.5rem;">
+                <h5 class="m-0 fw-bold"><%= `${userGame.UserGameBiodatum?.firstname || userGame.username} ${userGame.UserGameBiodatum?.lastname || ''}` %></h5>
+                <h6 class="text-muted m-0"><%= userGame.username %></h6>
                 <p class="m-0 fw-bold">Country: <span class="fw-normal"><%= userGame.UserGameBiodatum?.country || '-' %></span></p>
                 <div class="d-flex" style="gap:1rem;">
                     <a href="/view/user_game/<%= userGame.id %>" class="btn btn-outline-primary" style="width:fit-content;">Details</a>
-                    <button type="button" class="btn btn-outline-warning updateUserGameModalButton" data-bs-toggle="modal" data-bs-target="#updateUserGameModal<%= userGame.id %>" data-usergameid="<%= userGame.id %>">Update</button>
-                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteUserGameModal<%= userGame.id %>">Delete</button>
+                    <% if (loggedInUser.roleId === 1 || loggedInUser.id === userGame.id) { %>
+                    <button type="button" class="btn btn-outline-warning updateUserGameModalButton" data-bs-toggle="modal" data-bs-target="#updateUserGameModal<%= userGame.id %>" data-usergameid="<%= userGame.id %>">
+                        Update
+                    </button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteUserGameModal<%= userGame.id %>">
+                        Delete
+                    </button>
+                    <% } %>
                 </div>
             </div>
         </div>
 
+        <% if (loggedInUser.roleId === 1 || loggedInUser.id === userGame.id) { %>
         <%- include('./includes/modals/user-game/update', { userGame}) %>
-
         <%- include('./includes/modals/user-game/delete', { userGame}) %>
+        <% } %>
         <% } %>
     </div>
 </main>
 
+<% if (loggedInUser.roleId === 1) { %>
 <%- include('./includes/modals/user-game/create') %>
+<% } %>

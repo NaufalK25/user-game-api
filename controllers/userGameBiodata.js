@@ -1,9 +1,11 @@
+const fs = require('fs');
 const { validationResult } = require('express-validator');
-const { badRequest, notFound } = require('./error');
+const { badRequest, internalServerError, notFound } = require('./error');
+const { baseUrl } = require('../config/constants');
 const { UserGame, UserGameBiodata } = require('../database/models');
-const { getDataBySpecificField } = require('../helper');
 
-const getUserGameBiodataById = getDataBySpecificField(UserGameBiodata, 'id');
+const unlinkProfilePicturePath = `${__dirname}/../uploads/profiles/`;
+const jsonProfilePicturePath = `${baseUrl}/uploads/profiles/`;
 
 module.exports = {
     create: async (req, res) => {
@@ -11,7 +13,9 @@ module.exports = {
 
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const userGameBiodata = await UserGameBiodata.create(req.body);
+        const profilePicture = req.file ? req.file.filename : 'default-profile.png'
+        const userGameBiodata = await UserGameBiodata.create({ ...req.body, profilePicture });
+        userGameBiodata.profilePicture = `${jsonProfilePicturePath}${userGameBiodata.profilePicture}`;
 
         res.status(201).json({
             statusCode: 201,
@@ -24,21 +28,38 @@ module.exports = {
 
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const userGameBiodata = await getUserGameBiodataById(req.params.id);
+        const userGameBiodata = await UserGameBiodata.findByPk(req.params.id);
 
         if (!userGameBiodata) return notFound(req, res);
 
+        const profilePicture = req.file ? req.file.filename : undefined;
+        const requestBody = { ...req.body };
+
+        if (profilePicture) requestBody.profilePicture = profilePicture;
+
         const oldUserGameBiodataData = { ...userGameBiodata.dataValues };
-        const userGameBiodataFields = Object.keys(userGameBiodata.dataValues);
-        let fieldChanged = Object.keys(req.body).filter(key => userGameBiodataFields.includes(key));
+        const userGameBiodataFields = Object.keys(UserGameBiodata.rawAttributes);
+        let fieldChanged = Object.keys(requestBody).filter(key => userGameBiodataFields.includes(key));
         const before = {}, after = {};
 
         fieldChanged.forEach(field => {
             before[field] = oldUserGameBiodataData[field];
-            after[field] = req.body[field];
+            if (typeof oldUserGameBiodataData[field] === 'number') requestBody[field] = parseInt(requestBody[field]);
+            after[field] = requestBody[field];
         });
 
-        await userGameBiodata.update(req.body);
+        if (req.file && oldUserGameBiodataData.profilePicture !== 'default-profile.png') {
+            fs.unlink(`${unlinkProfilePicturePath}${oldUserGameBiodataData.profilePicture}`, err => {
+                if (err) return console.log(err);
+            });
+        }
+
+        await UserGameBiodata.update(requestBody, { where: { id: req.params.id } });
+
+        if (before.profilePicture && after.profilePicture) {
+            before.profilePicture = `${jsonProfilePicturePath}${before.profilePicture}`;
+            after.profilePicture = `${jsonProfilePicturePath}${after.profilePicture}`;
+        }
 
         res.status(200).json({
             statusCode: 200,
@@ -51,11 +72,20 @@ module.exports = {
 
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const userGameBiodata = await getUserGameBiodataById(req.params.id);
+        const userGameBiodata = await UserGameBiodata.findByPk(req.params.id);
 
         if (!userGameBiodata) return notFound(req, res);
 
-        await userGameBiodata.destroy();
+        const profilePicture = userGameBiodata.profilePicture;
+
+        if (profilePicture !== 'default-profile.png') {
+            fs.unlink(`${unlinkProfilePicturePath}${profilePicture}`, err => {
+                if (err) return internalServerError(err, req, res);
+            });
+        }
+
+        await UserGameBiodata.destroy({ where: { id: req.params.id } });
+        userGameBiodata.profilePicture = `${jsonProfilePicturePath}${userGameBiodata.profilePicture}`;
 
         res.status(200).json({
             statusCode: 200,
@@ -68,9 +98,11 @@ module.exports = {
 
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const userGameBiodata = await getUserGameBiodataById(req.params.id, [{ model: UserGame }]);
+        const userGameBiodata = await UserGameBiodata.findByPk(req.params.id, { include: [{ model: UserGame }] });
 
         if (!userGameBiodata) return notFound(req, res);
+
+        userGameBiodata.profilePicture = `${jsonProfilePicturePath}${userGameBiodata.profilePicture}`;
 
         res.status(200).json({
             statusCode: 200,
@@ -80,6 +112,9 @@ module.exports = {
     },
     findAll: async (req, res) => {
         const userGameBiodatas = await UserGameBiodata.findAll({ include: [{ model: UserGame }] });
+        userGameBiodatas.forEach(userGameBiodata => {
+            userGameBiodata.profilePicture = `${jsonProfilePicturePath}${userGameBiodata.profilePicture}`;
+        });
 
         res.status(200).json({
             statusCode: 200,
@@ -93,7 +128,9 @@ module.exports = {
 
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const userGameBiodata = await UserGameBiodata.findAll({ where: { userGameId: req.params.userGameId } });
+        const userGameBiodata = await UserGameBiodata.findOne({ where: { userGameId: req.params.userGameId } });
+
+        if (userGameBiodata) userGameBiodata.profilePicture = `${jsonProfilePicturePath}${userGameBiodata.profilePicture}`;
 
         res.status(200).json({
             statusCode: 200,

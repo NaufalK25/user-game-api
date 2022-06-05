@@ -10,16 +10,47 @@ module.exports = {
                 type: Sequelize.INTEGER
             },
             email: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
+                allowNull: false,
+                unique: true,
+                validate: {
+                    isEmail: true
+                }
             },
             firstname: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
+                allowNull: false
             },
             lastname: {
-                type: Sequelize.STRING
+                type: Sequelize.STRING,
+                allowNull: false
+            },
+            profilePicture: {
+                type: Sequelize.STRING,
+                allowNull: false,
+                defaultValue: 'default-profile.png'
+            },
+            country: {
+                type: Sequelize.STRING,
+                allowNull: false
             },
             age: {
-                type: Sequelize.INTEGER
+                type: Sequelize.INTEGER,
+                allowNull: false,
+                validate: {
+                    isInt: true,
+                    min: 0
+                }
+            },
+            userGameId: {
+                type: Sequelize.INTEGER,
+                references: {
+                    model: 'UserGames',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'SET NULL',
+                allowNull: false
             },
             createdAt: {
                 allowNull: false,

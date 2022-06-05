@@ -11,13 +11,14 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            this.belongsTo(models.Role, { foreignKey: 'roleId' });
             this.hasOne(models.UserGameBiodata, { foreignKey: 'userGameId' });
             this.hasMany(models.UserGameHistory, { foreignKey: 'userGameId' });
         }
     }
     UserGame.init({
         username: DataTypes.STRING,
-        password: DataTypes.STRING
+        password: DataTypes.STRING,
     }, {
         sequelize,
         modelName: 'UserGame'

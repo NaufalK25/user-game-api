@@ -1,16 +1,18 @@
+const fs = require('fs');
 const { validationResult } = require('express-validator');
 const { internalServerErrorPage, notFoundPage } = require('./error');
+const { baseUrl } = require('../../config/constants');
 const { UserGame, UserGameBiodata, UserGameHistory } = require('../../database/models');
-const { generateFlash, generateFlashObject, generateRenderObject, getDataBySpecificField } = require('../../helper');
+const { generateFlash, generateFlashObject, generateRenderObject } = require('../../helper');
 
-const getUserGameById = getDataBySpecificField(UserGame, 'id');
-const getUserGameBiodataById = getDataBySpecificField(UserGameBiodata, 'id');
-
+const unlinkProfilePicturePath = `${__dirname}/../../uploads/profiles/`;
 const generateUserGameDetailRenderObject = (req, userGame) => {
     return generateRenderObject({
         title: `User Game Detail - ${userGame.username}`,
         scripts: ['../../../js/user-game-detail.js', '../../../js/global.js'],
         extras: {
+            baseUrl,
+            loggedInUser: req.user,
             userGame,
             flash: generateFlashObject(req)
         }
@@ -21,10 +23,12 @@ module.exports = {
     createUserGameBiodata: async (req, res) => {
         try {
             const errors = validationResult(req);
-            const userGame = await getUserGameById(req.params.id, [
-                { model: UserGameBiodata },
-                { model: UserGameHistory }
-            ]);
+            const userGame = await UserGame.findByPk(req.params.id, {
+                include: [
+                    { model: UserGameBiodata },
+                    { model: UserGameHistory }
+                ]
+            });
 
             if (!errors.isEmpty()) {
                 generateFlash(req, { type: 'danger', errors: errors.array() });
@@ -32,7 +36,7 @@ module.exports = {
             }
             if (!userGame) return notFoundPage(req, res);
 
-            await UserGameBiodata.create(req.body);
+            await UserGameBiodata.create({ ...req.body, profilePicture: req.file ? req.file.filename : 'default-profile.png' });
 
             generateFlash(req, { type: 'success', message: `User Game Biodata ${userGame.username} has been created` });
             res.status(201).redirect(`/view/user_game/${userGame.id}`);
@@ -43,31 +47,42 @@ module.exports = {
     updateUserGameBiodataById: async (req, res) => {
         try {
             const errors = validationResult(req);
-            const userGame = await getUserGameById(req.params.id, [
-                { model: UserGameBiodata },
-                { model: UserGameHistory }
-            ]);
-            const userGameBiodata = await getUserGameBiodataById(req.body.userGameBiodataId);
+
+            const userGame = await UserGame.findByPk(req.params.id, {
+                include: [
+                    { model: UserGameBiodata },
+                    { model: UserGameHistory }
+                ]
+            });
+            const userGameBiodata = await UserGameBiodata.findByPk(req.body.userGameBiodataId);
             const updatedData = {};
+            const profilePicture = req.file ? req.file.filename : 'default-profile.png';
 
             if (!userGame) return notFoundPage(req, res);
             if (!userGameBiodata) return notFoundPage(req, res);
 
-            if (userGameBiodata.email !== req.body.email) updatedData.email = req.body.email;
-            if (userGameBiodata.firstname !== req.body.firstname) updatedData.firstname = req.body.firstname;
-            if (userGameBiodata.lastname !== req.body.lastname) updatedData.lastname = req.body.lastname;
-            if (userGameBiodata.age !== +req.body.age) updatedData.age = +req.body.age;
-            if (userGameBiodata.country !== req.body.country) updatedData.country = req.body.country;
+            if (Object.keys(req.body).length > 0) {
+                const { email, firstname, lastname, age, country } = req.body;
+                if (userGameBiodata.email !== email) updatedData.email = email;
+                if (userGameBiodata.firstname !== firstname) updatedData.firstname = firstname;
+                if (userGameBiodata.lastname !== lastname) updatedData.lastname = lastname;
+                if (userGameBiodata.age !== +age) updatedData.age = +age;
+                if (userGameBiodata.country !== country) updatedData.country = country;
+            }
+            if (req.file && profilePicture !== 'default-profile.png') {
+                updatedData.profilePicture = profilePicture;
+                fs.unlink(`${unlinkProfilePicturePath}${userGameBiodata.profilePicture}`, err => {
+                    if (err) return internalServerErrorPage(err, req, res);
+                });
+            }
 
             if (Object.keys(updatedData).length === 0) {
                 generateFlash(req, { type: 'info', message: 'No changes has been made' });
                 return res.status(200).redirect(`/view/user_game/${userGame.id}`);
             }
-            if (userGameBiodata.email !== req.body.email) {
-                if (!errors.isEmpty()) {
-                    generateFlash(req, { type: 'danger', errors: errors.array() });
-                    return res.status(400).render('user-game-detail', generateUserGameDetailRenderObject(req, userGame));
-                }
+            if (!errors.isEmpty()) {
+                generateFlash(req, { type: 'danger', errors: errors.array() });
+                return res.status(400).render('user-game-detail', generateUserGameDetailRenderObject(req, userGame));
             }
 
             await userGameBiodata.update(updatedData);
@@ -84,11 +99,17 @@ module.exports = {
 
             if (!errors.isEmpty()) return notFoundPage(req, res);
 
-            const userGame = await getUserGameById(req.params.id);
-            const userGameBiodata = await getUserGameBiodataById(req.body.userGameBiodataId);
+            const userGame = await UserGame.findByPk(req.params.id);
+            const userGameBiodata = await UserGameBiodata.findByPk(req.body.userGameBiodataId);
 
             if (!userGame) return notFoundPage(req, res);
             if (!userGameBiodata) return notFoundPage(req, res);
+
+            if (userGameBiodata.profilePicture !== 'default-profile.png') {
+                fs.unlink(`${unlinkProfilePicturePath}${userGameBiodata.profilePicture}`, err => {
+                    if (err) return internalServerErrorPage(err, req, res);
+                });
+            }
 
             await userGameBiodata.destroy();
 

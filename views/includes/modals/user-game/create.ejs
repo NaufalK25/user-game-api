@@ -7,23 +7,86 @@
             </div>
             <form action="/view/user_games" method="POST">
                 <div class="modal-body d-flex flex-column" style="gap:1rem;">
-                    <div class="input-group">
+                    <div class="input-group" title="Email">
+                        <span class="input-group-text" id="basic-addon-email">
+                            <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                                <path d="M0 0h24v24H0V0z" fill="none" />
+                                <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z" />
+                            </svg>
+                        </span>
+                        <input type="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon-email" name="email" id="email" autofocus required>
+                    </div>
+                    <div class="input-group" title="Username">
                         <span class="input-group-text" id="basic-addon-username">
                             <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
                                 <path d="M0 0h24v24H0V0z" fill="none" />
                                 <path d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 10c2.7 0 5.8 1.29 6 2H6c.23-.72 3.31-2 6-2m0-12C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                             </svg>
                         </span>
-                        <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon-username" name="username" id="username" required>
+                        <input type="text" minlength="3" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon-username" name="username" id="username" required>
                     </div>
-                    <div class="input-group">
-                        <span class="input-group-text" id="basic-addon-password">
-                            <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
-                                <path d="M0 0h24v24H0V0z" fill="none" />
-                                <path d="M22 19h-6v-4h-2.68c-1.14 2.42-3.6 4-6.32 4-3.86 0-7-3.14-7-7s3.14-7 7-7c2.72 0 5.17 1.58 6.32 4H24v6h-2v4zm-4-2h2v-4h2v-2H11.94l-.23-.67C11.01 8.34 9.11 7 7 7c-2.76 0-5 2.24-5 5s2.24 5 5 5c2.11 0 4.01-1.34 4.71-3.33l.23-.67H18v4zM7 15c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z" />
+                    <div class="d-flex" style="gap:1rem;">
+                        <div class="input-group" title="Firstname">
+                            <span class="input-group-text" id="basic-addon-firstname">
+                                <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                                    <path d="M0 0h24v24H0V0z" fill="none" />
+                                    <path d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 10c2.7 0 5.8 1.29 6 2H6c.23-.72 3.31-2 6-2m0-12C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                </svg>
+                            </span>
+                            <input type="text" class="form-control" placeholder="Firstname" aria-label="Firstname" aria-describedby="basic-addon-firstname" name="firstname" id="firstname" required>
+                        </div>
+                        <div class="input-group" title="Lastname">
+                            <span class="input-group-text" id="basic-addon-lastname">
+                                <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                                    <path d="M0 0h24v24H0V0z" fill="none" />
+                                    <path d="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 10c2.7 0 5.8 1.29 6 2H6c.23-.72 3.31-2 6-2m0-12C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 10c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                </svg>
+                            </span>
+                            <input type="text" class="form-control" placeholder="Lastname" aria-label="Lastname" aria-describedby="basic-addon-lastname" name="lastname" id="lastname" required>
+                        </div>
+                    </div>
+                    <div class="d-flex" style="gap:1rem;">
+                        <div class="input-group" title="Password">
+                            <span class="input-group-text" id="basic-addon-password">
+                                <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                                    <path d="M0 0h24v24H0V0z" fill="none" />
+                                    <path d="M22 19h-6v-4h-2.68c-1.14 2.42-3.6 4-6.32 4-3.86 0-7-3.14-7-7s3.14-7 7-7c2.72 0 5.17 1.58 6.32 4H24v6h-2v4zm-4-2h2v-4h2v-2H11.94l-.23-.67C11.01 8.34 9.11 7 7 7c-2.76 0-5 2.24-5 5s2.24 5 5 5c2.11 0 4.01-1.34 4.71-3.33l.23-.67H18v4zM7 15c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z" />
+                                </svg>
+                            </span>
+                            <input type="password" minlength="6" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon-password" name="password" id="password" required>
+                        </div>
+                        <div class="input-group" title="Confirm Password">
+                            <span class="input-group-text" id="basic-addon-confirmPassword">
+                                <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                                    <path d="M0 0h24v24H0V0z" fill="none" />
+                                    <path d="M22 19h-6v-4h-2.68c-1.14 2.42-3.6 4-6.32 4-3.86 0-7-3.14-7-7s3.14-7 7-7c2.72 0 5.17 1.58 6.32 4H24v6h-2v4zm-4-2h2v-4h2v-2H11.94l-.23-.67C11.01 8.34 9.11 7 7 7c-2.76 0-5 2.24-5 5s2.24 5 5 5c2.11 0 4.01-1.34 4.71-3.33l.23-.67H18v4zM7 15c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z" />
+                                </svg>
+                            </span>
+                            <input type="password" minlength="6" class="form-control" placeholder="Confirm Password" aria-label="ConfirmPassword" aria-describedby="basic-addon-confirmPassword" name="confirmPassword" id="confirmPassword" required>
+                        </div>
+                    </div>
+                    <div class="input-group" title="Age">
+                        <span class="input-group-text" id="basic-addon-age">
+                            <svg enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                                <g>
+                                    <rect fill="none" height="24" width="24" />
+                                </g>
+                                <g>
+                                    <path d="M20,10V8h-4V4h-2v4h-4V4H8v4H4v2h4v4H4v2h4v4h2v-4h4v4h2v-4h4v-2h-4v-4H20z M14,14h-4v-4h4V14z" />
+                                </g>
                             </svg>
                         </span>
-                        <input type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon-password" name="password" id="password" required>
+                        <input type="number" min="1" class="form-control" placeholder="Age" aria-label="Age" aria-describedby="basic-addon-age" name="age" id="age" required>
+                    </div>
+                    <div class="input-group" title="Country">
+                        <span class="input-group-text" id="basic-addon-country">
+                            <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                                <path d="M0 0h24v24H0V0z" fill="none" />
+                                <path d="M12.36 6l.4 2H18v6h-3.36l-.4-2H7V6h5.36M14 4H5v17h2v-7h5.6l.4 2h7V6h-5.6L14 4z" />
+                            </svg>
+                        </span>
+                        <input class="form-control" list="createCountryOptions" id="country" name="country" placeholder="Choose your country..." required>
+                        <datalist id="createCountryOptions"></datalist>
                     </div>
                 </div>
                 <div class="modal-footer">

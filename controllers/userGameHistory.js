@@ -1,9 +1,11 @@
+const fs = require('fs');
 const { validationResult } = require('express-validator');
-const { badRequest, notFound } = require('./error');
+const { badRequest, internalServerError, notFound } = require('./error');
+const { baseUrl } = require('../config/constants');
 const { UserGame, UserGameHistory } = require('../database/models');
-const { getDataBySpecificField } = require('../helper');
 
-const getUserGameHistoryById = getDataBySpecificField(UserGameHistory, 'id');
+const unlinkGameCoverPath = `${__dirname}/../uploads/games/`;
+const jsonGameCoverPath = `${baseUrl}/uploads/games/`;
 
 module.exports = {
     create: async (req, res) => {
@@ -11,13 +13,9 @@ module.exports = {
 
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const userGameHistory = await UserGameHistory.create({
-            title: req.body.title,
-            publisher: req.body.publisher,
-            lastPlayed: new Date(),
-            score: req.body.score,
-            userGameId: req.body.userGameId
-        });
+        const gameCover = req.file ? req.file.filename : 'default-cover.jpg';
+        const userGameHistory = await UserGameHistory.create({ ...req.body, cover: gameCover, lastPlayed: new Date() });
+        userGameHistory.cover = `${jsonGameCoverPath}${userGameHistory.cover}`;
 
         res.status(201).json({
             statusCode: 201,
@@ -30,21 +28,38 @@ module.exports = {
 
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const userGameHistory = await getUserGameHistoryById(req.params.id);
+        const userGameHistory = await UserGameHistory.findByPk(req.params.id);
 
         if (!userGameHistory) return notFound(req, res);
 
+        const gameCover = req.file ? req.file.filename : undefined;
+        const requestBody = { ...req.body };
+
+        if (gameCover) requestBody.cover = gameCover;
+
         const oldUserGameHistoryData = { ...userGameHistory.dataValues };
-        const userGameHistoryFields = Object.keys(userGameHistory.dataValues);
-        let fieldChanged = Object.keys(req.body).filter(key => userGameHistoryFields.includes(key));
+        const userGameHistoryFields = Object.keys(UserGameHistory.rawAttributes);
+        let fieldChanged = Object.keys(requestBody).filter(key => userGameHistoryFields.includes(key));
         const before = {}, after = {};
 
         fieldChanged.forEach(field => {
             before[field] = oldUserGameHistoryData[field];
-            after[field] = req.body[field];
+            if (typeof oldUserGameHistoryData[field] === 'number') requestBody[field] = parseInt(requestBody[field]);
+            after[field] = requestBody[field];
         });
 
-        await userGameHistory.update(req.body);
+        if (req.file && oldUserGameHistoryData.cover !== 'default-cover.jpg') {
+            fs.unlink(`${unlinkGameCoverPath}${oldUserGameHistoryData.cover}`, err => {
+                if (err) return console.log(err);
+            });
+        }
+
+        await UserGameHistory.update(requestBody, { where: { id: req.params.id } });
+
+        if (before.cover && after.cover) {
+            before.cover = `${jsonGameCoverPath}${before.cover}`;
+            after.cover = `${jsonGameCoverPath}${after.cover}`;
+        }
 
         res.status(200).json({
             statusCode: 200,
@@ -57,11 +72,20 @@ module.exports = {
 
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const userGameHistory = await getUserGameHistoryById(req.params.id);
+        const userGameHistory = await UserGameHistory.findByPk(req.params.id);
 
         if (!userGameHistory) return notFound(req, res);
 
-        await userGameHistory.destroy();
+        const gameCover = userGameHistory.cover;
+
+        if (gameCover !== 'default-cover.jpg') {
+            fs.unlink(`${unlinkGameCoverPath}${gameCover}`, err => {
+                if (err) return internalServerError(err, req, res);
+            });
+        }
+
+        await UserGameHistory.destroy({ where: { id: req.params.id } });
+        userGameHistory.cover = `${jsonGameCoverPath}${userGameHistory.cover}`;
 
         res.status(200).json({
             statusCode: 200,
@@ -74,9 +98,11 @@ module.exports = {
 
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
-        const userGameHistory = await getUserGameHistoryById(req.params.id, [{ model: UserGame }]);
+        const userGameHistory = await UserGameHistory.findByPk(req.params.id, { include: [{ model: UserGame }] });
 
         if (!userGameHistory) return notFound(req, res);
+
+        userGameHistory.cover = `${jsonGameCoverPath}${userGameHistory.cover}`;
 
         res.status(200).json({
             statusCode: 200,
@@ -86,6 +112,9 @@ module.exports = {
     },
     findAll: async (req, res) => {
         const userGameHistories = await UserGameHistory.findAll({ include: [{ model: UserGame, }] });
+        userGameHistories.forEach(userGameHistory => {
+            userGameHistory.cover = `${jsonGameCoverPath}${userGameHistory.cover}`;
+        });
 
         res.status(200).json({
             statusCode: 200,
@@ -100,6 +129,9 @@ module.exports = {
         if (!errors.isEmpty()) return badRequest(errors.array(), req, res);
 
         const userGameHistories = await UserGameHistory.findAll({ where: { userGameId: req.params.userGameId } });
+        userGameHistories.forEach(userGameHistory => {
+            userGameHistory.cover = `${jsonGameCoverPath}${userGameHistory.cover}`;
+        });
 
         res.status(200).json({
             statusCode: 200,

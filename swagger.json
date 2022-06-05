@@ -2,15 +2,24 @@
     "swagger": "2.0",
     "info": {
         "title": "User Game API",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "description": "Simple game api that store user account, biodata, and game histories"
     },
     "schemes": [
         "http",
         "https"
     ],
+    "securityDefinitions": {
+        "jwt": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Example: Bearer [JWT TOKEN]"
+        }
+    },
     "consumes": [
-        "application/json"
+        "application/json",
+        "multipart/form-data"
     ],
     "produces": [
         "application/json"
@@ -22,7 +31,8 @@
     },
     "tags": [
         {
-            "name": "Authentication"
+            "name": "Authentication",
+            "description": "Authentication"
         },
         {
             "name": "User Game",
@@ -34,31 +44,31 @@
         },
         {
             "name": "User Game History",
-            "description": "Game History User Played"
+            "description": "History Of Game Played By User"
         }
     ],
     "paths": {
-        "/login": {
+        "/register": {
             "post": {
-                "summary": "User login",
-                "operationId": "login",
+                "summary": "Register User",
+                "operationId": "register",
                 "responses": {
                     "200": {
-                        "description": "Login success",
+                        "description": "Register Success",
                         "schema": {
-                            "$ref": "#/definitions/loginResponse"
+                            "$ref": "#/responses/registerResponse"
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/badRequestResponse"
+                            "$ref": "#/responses/badRequestResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -69,7 +79,47 @@
                         "description": "Login user",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/postUserGamesRequest"
+                            "$ref": "#/requestBodies/postUserGamesRequest"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Authentication"
+                ]
+            }
+        },
+        "/login": {
+            "post": {
+                "summary": "User login",
+                "operationId": "login",
+                "responses": {
+                    "200": {
+                        "description": "Login Success",
+                        "schema": {
+                            "$ref": "#/responses/loginResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/responses/badRequestResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "description": "Login user",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/requestBodies/postUserGamesRequest"
                         }
                     }
                 ],
@@ -86,13 +136,13 @@
                     "200": {
                         "description": "Returns a list of user games",
                         "schema": {
-                            "$ref": "#/definitions/getUserGamesResponse"
+                            "$ref": "#/responses/getUserGamesResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -107,19 +157,19 @@
                     "201": {
                         "description": "Returns user game that has been created",
                         "schema": {
-                            "$ref": "#/definitions/postUserGamesResponse"
+                            "$ref": "#/responses/postUserGamesResponse"
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/badRequestResponse"
+                            "$ref": "#/responses/badRequestResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -130,10 +180,10 @@
                     {
                         "name": "body",
                         "in": "body",
-                        "description": "User game object to create a new user game",
+                        "description": "Create user game",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/postUserGamesRequest"
+                            "$ref": "#/requestBodies/postUserGamesRequest"
                         }
                     }
                 ]
@@ -147,25 +197,25 @@
                     "200": {
                         "description": "Returns a user game",
                         "schema": {
-                            "$ref": "#/definitions/getUserGameResponse"
+                            "$ref": "#/responses/getUserGameResponse"
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/badRequestResponse"
+                            "$ref": "#/responses/badRequestResponse"
                         }
                     },
                     "404": {
                         "description": "User game not found",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -185,29 +235,46 @@
             "patch": {
                 "summary": "Update user game by id",
                 "operationId": "UpdateUserGame",
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Returns before after user game field that has been updated",
                         "schema": {
-                            "$ref": "#/definitions/patchUserGameResponse"
+                            "$ref": "#/responses/patchUserGameResponse"
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/badRequestResponse"
+                            "$ref": "#/responses/badRequestResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "404": {
                         "description": "User game not found",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -225,9 +292,10 @@
                     {
                         "name": "body",
                         "in": "body",
-                        "description": "User game object to update user game",
+                        "description": "Update user game",
+                        "required": true,
                         "schema": {
-                            "$ref": "#/definitions/patchUserGameRequest"
+                            "$ref": "#/requestBodies/patchUserGameRequest"
                         }
                     }
                 ]
@@ -235,29 +303,46 @@
             "delete": {
                 "summary": "Delete user game by id",
                 "operationId": "DeleteUserGame",
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Returns user game that has been deleted",
                         "schema": {
-                            "$ref": "#/definitions/deleteUserGameResponse"
+                            "$ref": "#/responses/deleteUserGameResponse"
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/badRequestResponse"
+                            "$ref": "#/responses/badRequestResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "404": {
                         "description": "User game not found",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -283,13 +368,13 @@
                     "200": {
                         "description": "Returns a list of user game biodatas",
                         "schema": {
-                            "$ref": "#/definitions/getUserGameBiodatasResponse"
+                            "$ref": "#/responses/getUserGameBiodatasResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -300,23 +385,40 @@
             "post": {
                 "summary": "Create a new user game biodata",
                 "operationId": "CreateUserGameBiodatas",
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Returns user game biodata that has been created",
                         "schema": {
-                            "$ref": "#/definitions/postUserGameBiodatasResponse"
+                            "$ref": "#/responses/postUserGameBiodatasResponse"
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/badRequestResponse"
+                            "$ref": "#/responses/badRequestResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -325,13 +427,54 @@
                 ],
                 "parameters": [
                     {
-                        "name": "body",
-                        "in": "body",
-                        "description": "User game biodata object to create a new user game biodata",
+                        "name": "email",
+                        "in": "formData",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/postUserGameBiodatasRequest"
-                        }
+                        "type": "string",
+                        "format": "email"
+                    },
+                    {
+                        "name": "firstname",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "lastname",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "profilePicture",
+                        "in": "formData",
+                        "required": true,
+                        "type": "file"
+                    },
+                    {
+                        "name": "country",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "age",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 1
+                    },
+                    {
+                        "name": "userGameId",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 1
                     }
                 ]
             }
@@ -344,25 +487,25 @@
                     "200": {
                         "description": "Returns a user game biodata",
                         "schema": {
-                            "$ref": "#/definitions/getUserGameBiodataResponse"
+                            "$ref": "#/responses/getUserGameBiodataResponse"
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/badRequestResponse"
+                            "$ref": "#/responses/badRequestResponse"
                         }
                     },
                     "404": {
                         "description": "User game biodata not found",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -382,29 +525,46 @@
             "patch": {
                 "summary": "Update user game biodata by id",
                 "operationId": "UpdateUserGameBiodata",
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Returns before after user game biodata field that has been updated",
                         "schema": {
-                            "$ref": "#/definitions/patchUserGameBiodataResponse"
+                            "$ref": "#/responses/patchUserGameBiodataResponse"
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/badRequestResponse"
+                            "$ref": "#/responses/badRequestResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "404": {
                         "description": "User game biodata not found",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -420,41 +580,99 @@
                         "type": "integer"
                     },
                     {
-                        "name": "body",
-                        "in": "body",
-                        "description": "User game biodata object to update user game biodata",
-                        "schema": {
-                            "$ref": "#/definitions/patchUserGameBiodataRequest"
-                        }
+                        "name": "email",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "format": "email"
+                    },
+                    {
+                        "name": "firstname",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "lastname",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "profilePicture",
+                        "in": "formData",
+                        "required": false,
+                        "type": "file"
+                    },
+                    {
+                        "name": "country",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "age",
+                        "in": "formData",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 1
+                    },
+                    {
+                        "name": "userGameId",
+                        "in": "formData",
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 1
                     }
                 ]
             },
             "delete": {
                 "summary": "Delete user game biodata by id",
                 "operationId": "DeleteUserGameBiodata",
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Returns user game biodata that has been deleted",
                         "schema": {
-                            "$ref": "#/definitions/deleteUserGameBiodataResponse"
+                            "$ref": "#/responses/deleteUserGameBiodataResponse"
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/badRequestResponse"
+                            "$ref": "#/responses/badRequestResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "404": {
                         "description": "User game biodata not found",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -480,25 +698,25 @@
                     "200": {
                         "description": "Returns a user game biodata by user game id",
                         "schema": {
-                            "$ref": "#/definitions/getUserGameBiodataByUserGameIdResponse"
+                            "$ref": "#/responses/getUserGameBiodataByUserGameIdResponse"
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/badRequestResponse"
+                            "$ref": "#/responses/badRequestResponse"
                         }
                     },
                     "404": {
                         "description": "User game biodata not found",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -524,13 +742,13 @@
                     "200": {
                         "description": "Returns a list of user game histories",
                         "schema": {
-                            "$ref": "#/definitions/getUserGameHistoriesResponse"
+                            "$ref": "#/responses/getUserGameHistoriesResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -541,23 +759,40 @@
             "post": {
                 "summary": "Create a new user game history",
                 "operationId": "CreateUserGameHistories",
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Returns user game history that has been created",
                         "schema": {
-                            "$ref": "#/definitions/postUserGameHistoriesResponse"
+                            "$ref": "#/responses/postUserGameHistoriesResponse"
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/badRequestResponse"
+                            "$ref": "#/responses/badRequestResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -566,13 +801,41 @@
                 ],
                 "parameters": [
                     {
-                        "name": "body",
-                        "in": "body",
-                        "description": "User game history object to create a new user game history",
+                        "name": "title",
+                        "in": "formData",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/postUserGameHistoriesRequest"
-                        }
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "publisher",
+                        "in": "formData",
+                        "required": true,
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "cover",
+                        "in": "formData",
+                        "required": false,
+                        "type": "file"
+                    },
+                    {
+                        "name": "score",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 1,
+                        "maximum": 100
+                    },
+                    {
+                        "name": "userGameId",
+                        "in": "formData",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 1
                     }
                 ]
             }
@@ -585,25 +848,25 @@
                     "200": {
                         "description": "Returns a user game history",
                         "schema": {
-                            "$ref": "#/definitions/getUserGameHistoryResponse"
+                            "$ref": "#/responses/getUserGameHistoryResponse"
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/badRequestResponse"
+                            "$ref": "#/responses/badRequestResponse"
                         }
                     },
                     "404": {
                         "description": "User game history not found",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -623,29 +886,46 @@
             "patch": {
                 "summary": "Update user game history by id",
                 "operationId": "UpdateUserGameHistory",
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Returns before after user game history field that has been updated",
                         "schema": {
-                            "$ref": "#/definitions/patchUserGameHistoryResponse"
+                            "$ref": "#/responses/patchUserGameHistoryResponse"
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/badRequestResponse"
+                            "$ref": "#/responses/badRequestResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "404": {
                         "description": "User game history not found",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -657,45 +937,91 @@
                         "name": "id",
                         "in": "path",
                         "description": "User game history id",
-                        "required": true,
+                        "required": false,
                         "type": "integer"
                     },
                     {
-                        "name": "body",
-                        "in": "body",
-                        "description": "User game history object to update user game history",
-                        "schema": {
-                            "$ref": "#/definitions/patchUserGameHistoryRequest"
-                        }
+                        "name": "title",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "publisher",
+                        "in": "formData",
+                        "required": false,
+                        "type": "string",
+                        "format": "string"
+                    },
+                    {
+                        "name": "cover",
+                        "in": "formData",
+                        "required": false,
+                        "type": "file"
+                    },
+                    {
+                        "name": "score",
+                        "in": "formData",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 1,
+                        "maximum": 100
+                    },
+                    {
+                        "name": "userGameId",
+                        "in": "formData",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 1
                     }
                 ]
             },
             "delete": {
                 "summary": "Delete user game history by id",
                 "operationId": "DeleteUserGameHistory",
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Returns user game history that has been deleted",
                         "schema": {
-                            "$ref": "#/definitions/deleteUserGameHistoryResponse"
+                            "$ref": "#/responses/deleteUserGameHistoryResponse"
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/badRequestResponse"
+                            "$ref": "#/responses/badRequestResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "404": {
                         "description": "User game history not found",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -713,7 +1039,7 @@
                 ]
             }
         },
-        "/user_game/{userGameId}/history": {
+        "/user_game/{userGameId}/histories": {
             "get": {
                 "summary": "Get user game history by user game id",
                 "operationId": "GetUserGameHistoryByUserGameId",
@@ -721,25 +1047,25 @@
                     "200": {
                         "description": "Returns a user game history by user game id",
                         "schema": {
-                            "$ref": "#/definitions/getUserGameHistoryByUserGameIdResponse"
+                            "$ref": "#/responses/getUserGameHistoryByUserGameIdResponse"
                         }
                     },
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/badRequestResponse"
+                            "$ref": "#/responses/badRequestResponse"
                         }
                     },
                     "404": {
                         "description": "User game history not found",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/generalErrorResponse"
+                            "$ref": "#/responses/generalErrorResponse"
                         }
                     }
                 },
@@ -758,234 +1084,191 @@
             }
         }
     },
-    "definitions": {
+    "requestBodies": {
+        "postUserGamesRequest": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "format": "string"
+                }
+            }
+        },
+        "patchUserGameRequest": {
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "format": "string",
+                    "required": false
+                },
+                "password": {
+                    "type": "string",
+                    "format": "string",
+                    "required": false
+                }
+            }
+        },
+        "postUserGameBiodatasRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "firstname": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "lastname": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "country": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "age": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "userGameId": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "patchUserGameBiodataRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "format": "string",
+                    "required": false
+                },
+                "firstname": {
+                    "type": "string",
+                    "format": "string",
+                    "required": false
+                },
+                "lastname": {
+                    "type": "string",
+                    "format": "string",
+                    "required": false
+                },
+                "profilePicture": {
+                    "type": "string",
+                    "format": "string",
+                    "required": false
+                },
+                "country": {
+                    "type": "string",
+                    "format": "string",
+                    "required": false
+                },
+                "age": {
+                    "type": "integer",
+                    "format": "int32",
+                    "required": false
+                },
+                "userGameId": {
+                    "type": "integer",
+                    "format": "int32",
+                    "required": false
+                }
+            }
+        },
+        "postUserGameHistoriesRequest": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "publisher": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "score": {
+                    "type": "number",
+                    "format": "int32"
+                },
+                "userGameId": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "patchUserGameHistoryRequest": {
+            "type": "object",
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "format": "string",
+                    "required": false
+                },
+                "publisher": {
+                    "type": "string",
+                    "format": "string",
+                    "required": false
+                },
+                "cover": {
+                    "type": "string",
+                    "format": "string",
+                    "required": false
+                },
+                "score": {
+                    "type": "number",
+                    "format": "int32",
+                    "required": false
+                },
+                "userGameId": {
+                    "type": "integer",
+                    "format": "int32",
+                    "required": false
+                }
+            }
+        }
+    },
+    "responses": {
+        "registerResponse": {
+            "type": "object",
+            "properties": {
+                "statusCode": {
+                    "type": "integer",
+                    "format": "int32",
+                    "default": 201
+                },
+                "message": {
+                    "type": "string",
+                    "format": "string",
+                    "default": "Registered successfully"
+                },
+                "data": {
+                    "$ref": "#/definitions/userGame"
+                }
+            }
+        },
         "loginResponse": {
             "type": "object",
             "properties": {
+                "statusCode": {
+                    "type": "integer",
+                    "format": "int32",
+                    "default": 200
+                },
+                "message": {
+                    "type": "string",
+                    "format": "string",
+                    "default": "Logged in successfully"
+                },
                 "token": {
                     "type": "string",
                     "format": "string"
-                }
-            }
-        },
-        "userGame": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "username": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "password": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "createdAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "updatedAt": {
-                    "type": "string",
-                    "format": "date-time"
-                }
-            }
-        },
-        "userGameInclude": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "username": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "password": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "createdAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "updatedAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "UserGameBiodatum": {
-                    "$ref": "#/definitions/userGameBiodata"
-                },
-                "UserGameHistories": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/userGameHistory"
-                    }
-                }
-            }
-        },
-        "userGameBiodata": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "email": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "firstname": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "lastname": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "country": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "age": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "createdAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "updatedAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "userGameId": {
-                    "type": "integer",
-                    "format": "int32"
-                }
-            }
-        },
-        "userGameBiodataInclude": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "email": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "firstname": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "lastname": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "country": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "age": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "createdAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "updatedAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "userGameId": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "UserGame": {
-                    "$ref": "#/definitions/userGame"
-                }
-            }
-        },
-        "userGameHistory": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "title": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "publisher": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "lastPlayed": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "score": {
-                    "type": "number",
-                    "format": "int32"
-                },
-                "createdAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "updatedAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "userGameId": {
-                    "type": "integer",
-                    "format": "int32"
-                }
-            }
-        },
-        "userGameHistoryInclude": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "title": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "publisher": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "lastPlayed": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "score": {
-                    "type": "number",
-                    "format": "int32"
-                },
-                "createdAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "updatedAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "userGameId": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "UserGame": {
-                    "$ref": "#/definitions/userGame"
                 }
             }
         },
@@ -1011,19 +1294,6 @@
                     "items": {
                         "$ref": "#/definitions/userGameInclude"
                     }
-                }
-            }
-        },
-        "postUserGamesRequest": {
-            "type": "object",
-            "properties": {
-                "username": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "password": {
-                    "type": "string",
-                    "format": "string"
                 }
             }
         },
@@ -1063,21 +1333,6 @@
                 }
             }
         },
-        "patchUserGameRequest": {
-            "type": "object",
-            "properties": {
-                "username": {
-                    "type": "string",
-                    "format": "string",
-                    "required": false
-                },
-                "password": {
-                    "type": "string",
-                    "format": "string",
-                    "required": false
-                }
-            }
-        },
         "patchUserGameResponse": {
             "type": "object",
             "properties": {
@@ -1095,10 +1350,10 @@
                     "type": "object",
                     "properties": {
                         "before": {
-                            "$ref": "#/definitions/patchUserGameRequest"
+                            "$ref": "#/requestBodies/patchUserGameRequest"
                         },
                         "after": {
-                            "$ref": "#/definitions/patchUserGameRequest"
+                            "$ref": "#/requestBodies/patchUserGameRequest"
                         }
                     }
                 }
@@ -1147,35 +1402,6 @@
                 }
             }
         },
-        "postUserGameBiodatasRequest": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "firstname": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "lastname": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "country": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "age": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "userGameId": {
-                    "type": "integer",
-                    "format": "int32"
-                }
-            }
-        },
         "postUserGameBiodatasResponse": {
             "type": "object",
             "properties": {
@@ -1212,41 +1438,6 @@
                 }
             }
         },
-        "patchUserGameBiodataRequest": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "format": "string",
-                    "required": false
-                },
-                "firstname": {
-                    "type": "string",
-                    "format": "string",
-                    "required": false
-                },
-                "lastname": {
-                    "type": "string",
-                    "format": "string",
-                    "required": false
-                },
-                "country": {
-                    "type": "string",
-                    "format": "string",
-                    "required": false
-                },
-                "age": {
-                    "type": "integer",
-                    "format": "int32",
-                    "required": false
-                },
-                "userGameId": {
-                    "type": "integer",
-                    "format": "int32",
-                    "required": false
-                }
-            }
-        },
         "patchUserGameBiodataResponse": {
             "type": "object",
             "properties": {
@@ -1264,10 +1455,10 @@
                     "type": "object",
                     "properties": {
                         "before": {
-                            "$ref": "#/definitions/patchUserGameBiodataRequest"
+                            "$ref": "#/requestBodies/patchUserGameBiodataRequest"
                         },
                         "after": {
-                            "$ref": "#/definitions/patchUserGameBiodataRequest"
+                            "$ref": "#/requestBodies/patchUserGameBiodataRequest"
                         }
                     }
                 }
@@ -1337,27 +1528,6 @@
                 }
             }
         },
-        "postUserGameHistoriesRequest": {
-            "type": "object",
-            "properties": {
-                "title": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "publisher": {
-                    "type": "string",
-                    "format": "string"
-                },
-                "score": {
-                    "type": "number",
-                    "format": "int32"
-                },
-                "userGameId": {
-                    "type": "integer",
-                    "format": "int32"
-                }
-            }
-        },
         "postUserGameHistoriesResponse": {
             "type": "object",
             "properties": {
@@ -1394,31 +1564,6 @@
                 }
             }
         },
-        "patchUserGameHistoryRequest": {
-            "type": "object",
-            "properties": {
-                "title": {
-                    "type": "string",
-                    "format": "string",
-                    "required": false
-                },
-                "publisher": {
-                    "type": "string",
-                    "format": "string",
-                    "required": false
-                },
-                "score": {
-                    "type": "number",
-                    "format": "int32",
-                    "required": false
-                },
-                "userGameId": {
-                    "type": "integer",
-                    "format": "int32",
-                    "required": false
-                }
-            }
-        },
         "patchUserGameHistoryResponse": {
             "type": "object",
             "properties": {
@@ -1436,10 +1581,10 @@
                     "type": "object",
                     "properties": {
                         "before": {
-                            "$ref": "#/definitions/patchUserGameHistoryRequest"
+                            "$ref": "#/requestBodies/patchUserGameHistoryRequest"
                         },
                         "after": {
-                            "$ref": "#/definitions/patchUserGameHistoryRequest"
+                            "$ref": "#/requestBodies/patchUserGameHistoryRequest"
                         }
                     }
                 }
@@ -1528,6 +1673,245 @@
                             }
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "userGame": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "username": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "userGameInclude": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "username": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "UserGameBiodatum": {
+                    "$ref": "#/definitions/userGameBiodata"
+                },
+                "UserGameHistories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/userGameHistory"
+                    }
+                }
+            }
+        },
+        "userGameBiodata": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "email": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "firstname": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "lastname": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "profilePicture": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "country": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "age": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "userGameId": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "userGameBiodataInclude": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "email": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "firstname": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "lastname": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "profilePicture": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "country": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "age": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "userGameId": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UserGame": {
+                    "$ref": "#/definitions/userGame"
+                }
+            }
+        },
+        "userGameHistory": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "title": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "publisher": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "cover": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "lastPlayed": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "score": {
+                    "type": "number",
+                    "format": "int32"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "userGameId": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "userGameHistoryInclude": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "title": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "publisher": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "cover": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "lastPlayed": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "score": {
+                    "type": "number",
+                    "format": "int32"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "userGameId": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "UserGame": {
+                    "$ref": "#/definitions/userGame"
                 }
             }
         }

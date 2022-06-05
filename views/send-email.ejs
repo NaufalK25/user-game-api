@@ -1,0 +1,21 @@
+<main class="d-flex justify-content-center align-items-center flex-column" style="flex:1 1 0%;gap:1rem 0;">
+    <%- include('./includes/flash', { flash }) %>
+
+    <div class="border border-dark rounded p-3 d-flex justify-content-center flex-column" style="gap:1rem 0;">
+        <h3 class="text-center m-0">Send Email</h3>
+        <form action="/view/send_email" method="POST" class="d-flex justify-content-center flex-column text-center" style="gap:1rem 0;">
+            <div class="input-group" title="Email">
+                <span class="input-group-text" id="basic-addon-email">
+                    <svg height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+                        <path d="M0 0h24v24H0V0z" fill="none" />
+                        <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z" />
+                    </svg>
+                </span>
+                <input type="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="basic-addon-email" name="email" id="email" autofocus required>
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-success" style="width:fit-content;">Send</button>
+            </div>
+        </form>
+    </div>
+</main>

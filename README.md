@@ -16,6 +16,10 @@ Simple game api that store user account, biodata, and game histories
     ```
     psql --version
     ```
+4. [Heroku](https://devcenter.heroku.com/articles/heroku-cli)
+    ```
+    heroku version
+    ```
 
 ### How To Run In Local
 
@@ -26,54 +30,17 @@ Simple game api that store user account, biodata, and game histories
 2. Install dependencies
     ```
     npm install
+    yarn
     ```
 3. Create a database
     ```
     npm run db-init
+    yarn run db-init
     ```
 4. Run the server
     ```
     npm run dev
+    yarn run dev
     ```
 
-### Endpoint
-
-#### User Gane
-
-**GET** `/api/v1/user_games`
-
-**POST** `/api/v1/user_games`
-
-**GET** `/api/v1/user_game/:id`
-
-**PATCH** `/api/v1/user_game/:id`
-
-**DELETE** `/api/v1/user_game/:id`
-
-#### User Game Biodata
-
-**GET** `/api/v1/user_games/biodatas`
-
-**POST** `/api/v1/user_games/biodatas`
-
-**GET** `/api/v1/user_game/biodata/:id`
-
-**PATCH** `/api/v1/user_game/biodata/:id`
-
-**DELETE** `/api/v1/user_game/biodata/:id`
-
-**GET** `/api/v1/user_game/:userGameId/biodata`
-
-#### User Game History
-
-**GET** `/api/v1/user_games/histories`
-
-**POST** `/api/v1/user_games/histories`
-
-**GET** `/api/v1/user_game/history/:id`
-
-**PATCH** `/api/v1/user_game/history/:id`
-
-**DELETE** `/api/v1/user_game/history/:id`
-
-**GET** `/api/v1/user_game/:userGameId/history`
+Status: `Development`
