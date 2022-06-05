@@ -6,7 +6,7 @@
     "scripts": {
         "start": "node ./bin/www",
         "dev": "nodemon ./bin/www",
-        "postinstall": "npx sequelize-cli db:migrate",
+        "postinstall": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
         "test": "npx jest"
     },
     "keywords": [],
