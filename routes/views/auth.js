@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.route('/register')
     .get((req, res, next) => {
-        if (req.user) return res.redirect('/view/user_games');
+        if (req.user) return res.status(302).redirect('/view/user_games');
         next();
     }, getRegisterPage)
     .post([
@@ -58,7 +58,7 @@ router.route('/register')
 
 router.route('/login')
     .get((req, res, next) => {
-        if (req.user) return res.redirect('/view/user_games');
+        if (req.user) return res.status(302).redirect('/view/user_games');
         next();
     }, getLoginPage)
     .post([
@@ -77,7 +77,7 @@ router.route('/login')
 
 router.route('/logout')
     .post((req, res, next) => {
-        if (!req.user) return res.redirect('/view/login');
+        if (!req.user) return res.status(302).redirect('/view/login');
         next();
     }, logout)
     .all(methodNotAllowedPage);

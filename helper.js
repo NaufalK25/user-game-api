@@ -6,15 +6,13 @@ const getEndpoint = (endpoint = '/api/v1') => {
     return (endpoint === '/') ? endpoint : endpoint.replace(/\/$/, '');
 }
 
-const generateRenderObject = ({ title = 'User Game API', scripts = [], styles = [], extras = {} } = {}) => {
-    return {
-        title,
-        layout: 'layouts/layout',
-        scripts: [...scripts],
-        styles: [...styles],
-        ...extras
-    }
-}
+const generateRenderObject = ({ title = 'User Game API', scripts = [], styles = [], extras = {} } = {}) => ({
+    title,
+    layout: 'layouts/layout',
+    scripts: [...scripts],
+    styles: [...styles],
+    ...extras
+});
 
 const generateErrorRenderObject = ({ title, message } = {}) => {
     if (!title && !message) return {};

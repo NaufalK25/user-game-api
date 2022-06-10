@@ -13,7 +13,7 @@ const createStorage = (uploadField = '') => {
         },
         filename: (req, file, cb) => {
             if (file.mimetype.startsWith('image/')) {
-                cb(null, `${v4().replaceAll()}${path.extname(file.originalname)}`);
+                cb(null, `${v4().replace(/-/g, '')}${path.extname(file.originalname)}`);
             } else {
                 cb(new Error('Invalid image type'), null);
             }

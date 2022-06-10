@@ -1,8 +1,3 @@
-/*
- * For a detailed explanation regarding each configuration property, visit:
- * https://jestjs.io/docs/configuration
- */
-
 module.exports = {
     // All imported modules in your tests should be mocked automatically
     // automock: false,
@@ -27,11 +22,7 @@ module.exports = {
 
     // An array of regexp pattern strings used to skip coverage collection
     coveragePathIgnorePatterns: [
-      "\\\\node_modules\\\\",
-      "\\\\controllers\\\\views\\\\",
-      "\\\\routes\\\\views\\\\",
-      "\\\\middlewares\\\\passportLocal.js",
-      "\\\\test_backup\\\\"
+        "\\\\node_modules\\\\"
     ],
 
     // Indicates which provider should be used to instrument code for coverage
@@ -150,18 +141,14 @@ module.exports = {
     // testLocationInResults: false,
 
     // The glob patterns Jest uses to detect test files
-    testMatch: [
-      "**/__tests__/**/*.[jt]s?(x)",
-      "**/?(*.)+(spec|test).[tj]s?(x)"
-    ],
+    // testMatch: [
+    //     "**/__tests__/**/*.[jt]s?(x)",
+    //     "**/?(*.)+(spec|test).[tj]s?(x)"
+    // ],
 
     // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
     testPathIgnorePatterns: [
-      "\\\\node_modules\\\\",
-      "\\\\controllers\\\\views\\\\",
-      "\\\\routes\\\\views\\\\",
-      "\\\\middlewares\\\\passportLocal.js",
-      "\\\\test_backup\\\\"
+        "\\\\node_modules\\\\"
     ],
 
     // The regexp pattern or array of patterns that Jest uses to detect test files

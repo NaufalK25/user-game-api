@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.route('/user_games')
     .get((req, res, next) => {
-        if (!req.user) return res.redirect('/view/login');
+        if (!req.user) return res.status(302).redirect('/view/login');
         next();
     }, getAllUserGamesPage)
     .post([
@@ -58,7 +58,7 @@ router.route('/user_games')
 
 router.route('/user_game/:id')
     .get((req, res, next) => {
-        if (!req.user) return res.redirect('/view/login');
+        if (!req.user) return res.status(302).redirect('/view/login');
         next();
     }, [
         param('id').isInt().withMessage('Id must be an integer')

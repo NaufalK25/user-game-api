@@ -43,4 +43,4 @@ Simple game api that store user account, biodata, and game histories
     yarn run dev
     ```
 
-Status: `Development`
+Status: `Deployed`
